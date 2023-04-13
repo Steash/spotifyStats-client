@@ -1,5 +1,3 @@
-// MyComponent.vue
-
 <template>
     <div>
         <button @click="onLogin">Log In with Spotify</button>

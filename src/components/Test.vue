@@ -1,21 +1,6 @@
 <template>
     <h1>My top artists</h1>
 
-    <!-- <ul>
-      <li v-for="(artist, index) in topArtists.items" :key="index">
-        {{ artist.name }}
-      </li>
-    </ul> -->
-    <!-- <button @click="showArtist()">show Artist</button> -->
-    <!-- <h3>Artist: </h3>
-    {{ this.newArtist.name }} -->
-    <!-- <h3>Genres: </h3>
-    <p v-for="(genre, index) in this.newArtist.genres" :key="index">{{ genre }}</p> -->
-
-    <!-- <button @click="getToken()">getToken</button> -->
-
-    <!-- <button @click="getTopArtists()">get top artists</button> -->
-
     <ol>
         <li v-for="item in topArtists" :key="item.id">
             {{ item.name }}
@@ -30,15 +15,16 @@
     <img :src="this.user.avatar" />
     <button @click="setUser()">set user</button>
     <button @click="postMyProfile()">post profile</button>
+    <button @click="postMyTopArtists()">postTopArtist</button>
 </template>
   
 <script>
-import artist from '../api/test';
+import artist from '../api/artist';
 import gettoken from '../api/token';
 import topItems from '../api/topItems';
 import user from '../api/user';
 // import { getTopItems } from '../api/topItems';
-import axios from 'axios';
+
 
 export default {
     name: 'HelloWorld',
@@ -81,6 +67,7 @@ export default {
             topItems.getTopItems(this.$store.getters.accessToken, 'artists')
                 .then((data) => {
                     this.topArtists = data;
+                    console.log("top artist" + this.topArtists[0]);
                 });
         },
         async getMyProfile() {
@@ -101,6 +88,9 @@ export default {
             user.postSpotifyUser(this.user)
 
         },
+        postMyTopArtists() {
+            topItems.postTopArtist(this.topArtists[0])
+        }
     }
 }
 </script>

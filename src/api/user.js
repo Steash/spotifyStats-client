@@ -19,7 +19,7 @@ const spotifyUser = {
     postSpotifyUser(user) {
         const url = 'http://localhost:8080/user/create'
 
-        console.log(user)
+        // console.log(user)
 
         axios.post(url, user)
             .then(response => {
