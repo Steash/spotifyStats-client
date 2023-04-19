@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from 'axios'
+import store from '../store'
 
 const topItems = {
     async getTopItems(token, type) {
@@ -26,13 +27,14 @@ const topItems = {
         const url = 'http://localhost:8080/topArtist/create'
 
         const body = {
-            artistSpotifyId: topArtist.artistSpotifyId
-            rank: topArtist.rank,
-            userId: $store.get
+            artistSpotifyId: topArtist.id,
+            rank: topArtist.popularity,
+            userId: store.getters.userId,
+            accessToken: store.getters.accessToken
         }
 
-        console.log(topArtist)
-        console.log(body)
+        console.log('topartist: ', topArtist)
+        console.log('body: ', body)
 
         axios.post(url, body)
             .then(response => {

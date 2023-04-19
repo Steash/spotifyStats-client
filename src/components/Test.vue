@@ -3,7 +3,8 @@
 
     <ol>
         <li v-for="item in topArtists" :key="item.id">
-            {{ item.name }}
+            
+            <router-link :to="{name: 'ArtistDetail', params:{id: item.id }}" class="hover:text-gray-200">{{ item.name }}</router-link>
             <!-- - {{ item.genres }} 
         - {{ item.popularity }} -->
             <!-- {{ item.artists.map(artist => artist.name).join(', ') }} -->
@@ -13,16 +14,20 @@
     <h1>My profile</h1>
     {{ this.user.displayName }}: {{ this.user.email }} - id: {{ this.user.spotifyId }} - country: {{ this.user.country }} - product: {{ this.user.product }} 
     <img :src="this.user.avatar" />
-    <button @click="setUser()">set user</button>
+    <button @click="setUser()">Register this user</button>
     <button @click="postMyProfile()">post profile</button>
     <button @click="postMyTopArtists()">postTopArtist</button>
+    <button @click="logout()">Logout</button>
+    <button @click="postAllTopArtists()">Post all Top Artists</button>
 </template>
   
 <script>
-import artist from '../api/artist';
-import gettoken from '../api/token';
-import topItems from '../api/topItems';
-import user from '../api/user';
+import artist from '../api/artist'
+import gettoken from '../api/token'
+import topItems from '../api/topItems'
+import user from '../api/user'
+import login from '../api/login'
+import store from '../store'
 // import { getTopItems } from '../api/topItems';
 
 
@@ -41,7 +46,8 @@ export default {
                 country: '',
                 avatar: '',
                 product: '',
-                token: ''
+                accessToken: '',
+                refreshToken: ''
             }
         }
     },
@@ -64,32 +70,42 @@ export default {
             }
         },
         async getTopArtists() {
-            topItems.getTopItems(this.$store.getters.accessToken, 'artists')
+            topItems.getTopItems(store.getters.accessToken, 'artists')
                 .then((data) => {
                     this.topArtists = data;
                     console.log("top artist" + this.topArtists[0]);
                 });
         },
         async getMyProfile() {
-            user.getSpotifyUser(this.$store.getters.accessToken)
+            user.getSpotifyUser(store.getters.accessToken)
                 .then((data) => {
                     this.myProfile = data;
                 });
         },
         setUser() {
-            this.user.displayName = this.myProfile.display_name;
-            this.user.spotifyId = this.myProfile.id;
-            this.user.email = this.myProfile.email;
-            this.user.country = this.myProfile.country;
-            this.user.avatar = this.myProfile.images[0].url;
-            this.user.product = this.myProfile.product;
-            this.user.token = this.$store.getters.accessToken; // remove later
-
-            user.postSpotifyUser(this.user)
-
+            if (this.myProfile != '') {
+                this.user.displayName = this.myProfile.display_name;
+                this.user.spotifyId = this.myProfile.id;
+                this.user.email = this.myProfile.email;
+                this.user.country = this.myProfile.country;
+                this.user.avatar = this.myProfile.images[0].url;
+                this.user.product = this.myProfile.product;
+                this.user.accessToken = store.getters.accessToken; // remove later
+                this.user.refreshToken = store.getters.refreshToken;
+                user.postSpotifyUser(this.user)
+            } else {
+                alert('no profile');
+            }
         },
         postMyTopArtists() {
-            topItems.postTopArtist(this.topArtists[0])
+            if(this.topArtists.length > 0) {
+                topItems.postTopArtist(this.topArtists[0])
+            } else {
+                alert("No top artists found")
+            }
+        },
+        logout() {
+            login.logout();
         }
     }
 }

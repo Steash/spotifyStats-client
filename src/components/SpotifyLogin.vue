@@ -14,7 +14,7 @@ export default {
     // },
     methods: {
         async onLogin() {
-            login.login();
+            login.loginSpotify()
         },
         async authorize() {
             const token = await login.authorize();

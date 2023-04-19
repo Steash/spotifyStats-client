@@ -12,6 +12,7 @@ export default createStore({
     refreshToken: (state) => state.refreshToken,
     expiresIn: (state) => state.expiresIn,
     userId: (state) => state.userId,
+    isAuthenticated: (state) => !!state.accessToken,
   },
   mutations: {
     SET_ACCESS_TOKEN(state, accessToken) {
@@ -30,6 +31,32 @@ export default createStore({
       state.userId = userId;
       localStorage.setItem('userId', userId); 
     },
+    CLEAR_ACCESS_TOKEN(state) {
+      state.accessToken = null;
+      localStorage.removeItem('accessToken');
+    },
+    CLEAR_REFRESH_TOKEN(state) {
+      state.refreshToken = null;
+      localStorage.removeItem('refreshToken');
+    },
+    CLEAR_EXPIRES_IN(state) {
+      state.expiresIn = null;
+      localStorage.removeItem('expiresIn');
+    },
+    CLEAR_USER_ID(state) {
+      state.userId = null;
+      localStorage.removeItem('userId');
+    },
+    CLEAR_ALL(state) {
+      state.accessToken = null;
+      state.refreshToken = null;
+      state.expiresIn = null;
+      state.userId = null;
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('expiresIn');
+      localStorage.removeItem('userId');
+    }
   },
   actions: {
   },
