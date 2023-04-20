@@ -1,8 +1,8 @@
 <template>
     <div>
-        <button @click="onLogin">Log In with Spotify</button>
+        <button class="border bg-green-600 text-white font-semibold rounded-lg p-2 m-2" @click="onLogin">Log In with Spotify</button>
     </div>
-    <button @click="authorize">Authorize</button>
+    <button class="border border-gray-800 rounded-lg p-2 m-2" @click="authorize">Authorize</button>
 </template>
 
 <script>

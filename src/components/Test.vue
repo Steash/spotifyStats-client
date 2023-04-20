@@ -1,5 +1,5 @@
 <template>
-    <h1>My top artists</h1>
+    <h1 class="text-2xl font-bold pb-4">My top artists</h1>
 
     <ol>
         <li v-for="item in topArtists" :key="item.id">
@@ -11,14 +11,14 @@
         </li>
     </ol>
 
-    <h1>My profile</h1>
+    <h1 class="text-2xl font-bold pb-4">My profile</h1>
     {{ this.user.displayName }}: {{ this.user.email }} - id: {{ this.user.spotifyId }} - country: {{ this.user.country }} - product: {{ this.user.product }} 
     <img :src="this.user.avatar" />
-    <button @click="setUser()">Register this user</button>
-    <button @click="postMyProfile()">post profile</button>
-    <button @click="postMyTopArtists()">postTopArtist</button>
-    <button @click="logout()">Logout</button>
-    <button @click="postAllTopArtists()">Post all Top Artists</button>
+    <button class="border border-gray-800 rounded-lg p-2 m-2" @click="setUser()">Register this user</button>
+    <button class="border border-gray-800 rounded-lg p-2 m-2" @click="postMyProfile()">post profile</button>
+    <button class="border border-gray-800 rounded-lg p-2 m-2" @click="postMyTopArtists()">postTopArtist</button>
+    <button class="border border-gray-800 rounded-lg p-2 m-2" @click="logout()">Logout</button>
+    <button class="border border-gray-800 rounded-lg p-2 m-2" @click="postAllTopArtists()">Post all Top Artists</button>
 </template>
   
 <script>
