@@ -1,23 +1,32 @@
 <template>
-  <div class="home">
-    <!-- <HelloWorld/> -->
-    <SpotifyLogin/>
-    <Test/>
-  </div>
+    <div class="flex flex-col min-h-screen">
+        <h3 class="items-center font-semibold text-xl p-8 mx-auto text-gray-600">
+            Access the information that Spotify doesn't provide
+        </h3>   
+
+        <h3 class="items-center font-semibold text-xl p-8 mx-auto text-gray-600">
+            Find out which friends have common music interest
+        </h3>   
+
+        <h3 class="items-center font-semibold text-xl p-8 mx-auto text-gray-600">
+            See which friends Listen to the same artists
+        </h3>   
+
+        <h3 class="items-center font-semibold text-xl p-8 mx-auto text-gray-600">
+            See which friends Listen to the same artists
+        </h3>   
+    </div>
+    
+    
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-import SpotifyLogin from '@/components/SpotifyLogin.vue';
-import Test from '@/components/Test.vue';
 
 export default {
-  name: 'HomeView',
+  name: 'LoginView',
   components: {
-    // HelloWorld,
-    SpotifyLogin,
-    Test
+
+
   }
 }
 </script>

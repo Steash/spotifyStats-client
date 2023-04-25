@@ -1,5 +1,5 @@
 import axios from 'axios'
-import store from '../store'
+import store from '@/store'
 
 const topItems = {
     async getTopItems(token, type) {
@@ -42,18 +42,27 @@ const topItems = {
             }).catch(error => {
                 console.log(error)
             });
+    },
+    postAllTopArtists(topArtists) {
+        const url = 'http://localhost:8080/topArtist/create/multiple'
+
+        const topArtistDtos = topArtists.map((topArtist, index) => {
+            return {
+                artistSpotifyId: topArtist.id, 
+                artistName: topArtist.name,
+                rank: index + 1,
+                userId: store.getters.userId,
+                avatar: topArtist.images[2].url
+            }
+        });
+
+        axios.post(url, topArtistDtos)
+            .then(response => {
+                console.log(response);
+            }).catch(error => {
+                console.log(error)
+            });
     }
-
-    // For artist in topartist
-	// Artist id
-	
-	// Finnd artist in own DB
-	// 	If successful
-	// 		Post topartist
-	// 	If not successful
-	// 		Post artist
-	// 			Post topartist
-
 }
 
 

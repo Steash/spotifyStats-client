@@ -2,20 +2,13 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
   <NavBar/>
   <router-view/>
+  <Footer></Footer>
 </template>
 
 <style>
 
-
-#app {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
 nav {
+  text-align: center;
   padding: 30px;
 }
 
@@ -33,11 +26,13 @@ nav a.router-link-exact-active {
 // import login from './api/login';
 
 import NavBar from '@/components/reusables/NavBar.vue';
+import Footer from '@/components/reusables/FooterComponent.vue';
 
 export default {
   name: 'App',
   components: {
     NavBar,
+    Footer
   }
 }
 

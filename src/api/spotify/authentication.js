@@ -1,6 +1,6 @@
 import axios from 'axios';
-import store from '../store';
-import user from '../api/user';
+import store from '@/store';
+import user from './user';
 
 const login = {
     clientId: '8c92a572d46545d8bba7bb2ad6d182a6',
@@ -16,15 +16,16 @@ const login = {
         const code = await this.getCode()
         const tokens = await this.getTokens(code)
 
-        // window.location = this.redirectUri;
-
         let spotifyRsp = await user.getSpotifyUser(tokens.accessToken)
         let spotifyId = spotifyRsp.id
 
         console.log('spotifyId: ', spotifyId)
 
         // login
-        this.login(spotifyId, tokens.accessToken, tokens.refreshToken)
+        console.log("logging in...")
+        await this.login(spotifyId, tokens.accessToken, tokens.refreshToken)
+
+        // window.location = this.redirectUri;
 
         return tokens;
     },
@@ -90,7 +91,7 @@ const login = {
             throw new Error('Failed to retrieve access token');
         }
     },
-    login(spotifyId, accessToken, refreshToken) {
+     async login(spotifyId, accessToken, refreshToken) {
         const url = 'http://localhost:8080/user/login'
 
         const loginDto = {
@@ -117,6 +118,7 @@ const login = {
             });
     },
     logout() {
+        
         const url = 'http://localhost:8080/user/logout'
 
         const logoutDto = {
