@@ -54,7 +54,7 @@
                 <button class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View all</button>
             </div>
              <!-- artist box -->
-            <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2">
+            <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2" id="topArtists-box">
                 <h1 class="text-2xl font-bold pb-4">Top Artists</h1>
 
                 <div v-if="!expandedArtists">
@@ -172,11 +172,16 @@ export default {
         },
         toggleExpandedArtists() {
             this.expandedArtists = !this.expandedArtists
+            this.scrollToTarget('topArtists-box')
         },
         convertMsToMins(ms) {
             const mins = Math.floor(ms / 60000)
             const secs = ((ms % 60000) / 1000).toFixed(0)
             return `${mins}:${(secs < 10 ? "0" : "")}${secs}`
+        },
+        scrollToTarget(id) {
+            const targetElement = document.getElementById(id)
+            targetElement.scrollIntoView({ behavior: 'smooth'})
         }
     }
 

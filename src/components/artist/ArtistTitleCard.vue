@@ -11,7 +11,7 @@
                 </div>
                 <div class="flex-col flex items-start my-auto justify-center ">
                     <h1 class="text-6xl text-white font-semibold pt- pb-4"> {{ this.artist.name }}</h1>
-                    <h4 class="text-white pl-1">13 friends also listen to {{ this.artist.name }}</h4>
+                    <button @click="scrollToTarget('mutual-fan-box')" class="text-white pl-1">{{ mutualFans.length }} friends also listen to {{ this.artist.name }}</button>
                 </div>
             </div>
 
@@ -19,7 +19,7 @@
             
             <!-- Song box -->
             
-                <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2">
+                <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2" id="popular-songs-box">
                     <h1 class="text-2xl font-bold pb-4">Popular</h1>
                     
                     <div v-if="!expandedSongs">
@@ -45,25 +45,29 @@
                         </div>
                         <button @click="toggleExpandedSongs" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View less</button>
                     </div>
-
-
-                
                 
             </div>
-            
 
-            <!-- Mutual friend box -->
-            <div class="flex-col flex items-start  border-gray-900 p-10">
-                <h1 class="text-2xl font-bold pb-4">Friends who also listen to {{ this.artist.name }}</h1>
-                <ol class="flex flex-col items-start p-2 pl-4">
-                    <li>1. Jim Li</li>
-                    <li>2. Willem van den Hout</li>
-                    <li>3. Marcio Wood</li>
-                    <li>4. Kim van </li>
-                    <li>5. Jim Li</li>
-                    <li>6. Jim Li</li>
-                </ol>
-                <h4 class=""></h4>
+           <!-- Mutual fan box -->
+            
+            <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2" id="mutual-fan-box">
+                    <h1 class="text-2xl font-bold pb-4">Friends who also listen to {{ this.artist.name }}</h1>
+                    
+                    <div>
+                        <div v-for="(user, index) in this.mutualFans" :key="index" class="flex flex-row items-center py-2">
+                            <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
+                            <img class="w-12 h-12 my-auto" :src="user.avatar" alt="user">
+                            <div class="flex flex-row items-start justify-between flex-1 pl-4">
+                                <p class="w-full md:w-96 px-2">{{ user.displayName }}</p>
+                            </div>
+                        </div>
+                        <!-- <button @click="toggleExpandedSongs" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View more</button> -->
+                    </div>
+
+
+
+                
+                
             </div>
 
 
@@ -75,6 +79,7 @@
 <script>
 import artist from "@/api/spotify/artist"
 import store from "@/store/"
+import user from "@/api/backend/user"
 
 export default {
     data() {
@@ -83,6 +88,7 @@ export default {
             topTracks: [],
             artistImage: '',
             expandedSongs: false,
+            mutualFans : '',
         }
     },
     computed: {
@@ -95,35 +101,36 @@ export default {
         this.getArtistDetail()
         this.getArtistTopTracks()
         // console.log("CONSOLE LOGGINGGGG: ", this.artist.images[0].url)
+        // console.log("CONSOLE LOGGINGGGG: ", this.artist[0].name)
+        this.getMutuals()
     },
     // props: ['id'],
     methods: {
         async getArtistDetail() {
-            let retrievedArtist = await artist.getArtist(store.getters.accessToken, this.$route.params.id)
-            console.log(retrievedArtist)
+            const retrievedArtist = await artist.getArtist(store.getters.accessToken, this.$route.params.id)
+            // console.log("retrieved artist: ", retrievedArtist)
             this.artist = retrievedArtist
             this.artistImage = this.artist.images[2].url
             // console.log("CONSOLE LOGGING2131231GG: ", this.artist.images[0].url)
         },
         async getArtistTopTracks() {
-            let topTracks = await artist.getTopTracks(store.getters.accessToken, this.$route.params.id)
-            console.log(topTracks)
-            this.topTracks = topTracks
-
-            for(let track in topTracks) {
-                let count = 0
-                console.log("track: ", track)
-                console.log("track: ", topTracks[count])
-                count++
-            }
+            this.topTracks = await artist.getTopTracks(store.getters.accessToken, this.$route.params.id)
+        },
+        async getMutuals() {
+            this.mutualFans = await user.getMutualTopArtists("0du5cEVh5yTK9QJze8zA0C")
         },
         toggleExpandedSongs() {
             this.expandedSongs = !this.expandedSongs
+            this.scrollToTarget('popular-songs-box')
         },
         convertMsToMins(ms) {
             const mins = Math.floor(ms / 60000)
             const secs = ((ms % 60000) / 1000).toFixed(0)
             return `${mins}:${(secs < 10 ? "0" : "")}${secs}`
+        },
+        scrollToTarget(id) {
+            const targetElement = document.getElementById(id)
+            targetElement.scrollIntoView({ behavior: 'smooth'})
         }
     }
 
