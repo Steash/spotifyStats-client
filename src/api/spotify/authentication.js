@@ -1,5 +1,6 @@
 import axios from 'axios';
-import store from '../store';
+import store from '@/store';
+import user from './user';
 
 const login = {
     clientId: '8c92a572d46545d8bba7bb2ad6d182a6',
@@ -12,15 +13,27 @@ const login = {
      * @returns {Promise<{accessToken: string, refreshToken: string, expiresIn: number}>}
      */
     async authorize() {
-        const code = await this.getCode();
-        const tokens = await this.getTokens(code);
+        const code = await this.getCode()
+        const tokens = await this.getTokens(code)
+
+        let spotifyRsp = await user.getSpotifyUser(tokens.accessToken)
+        let spotifyId = spotifyRsp.id
+
+        console.log('spotifyId: ', spotifyId)
+
+        // login
+        console.log("logging in...")
+        await this.login(spotifyId, tokens.accessToken, tokens.refreshToken)
+
+        // window.location = this.redirectUri;
+
         return tokens;
     },
 
     /**
      * Redirects the user to the Spotify authorization page.
      */
-    login() {
+    loginSpotify() {
         const url = `https://accounts.spotify.com/authorize?response_type=code&client_id=${this.clientId}&scope=${encodeURIComponent(this.scopes.join(' '))}&redirect_uri=${encodeURIComponent(this.redirectUri)}`;
         
         window.location = url;
@@ -77,6 +90,49 @@ const login = {
             console.log(error);
             throw new Error('Failed to retrieve access token');
         }
+    },
+     async login(spotifyId, accessToken, refreshToken) {
+        const url = 'http://localhost:8080/user/login'
+
+        const loginDto = {
+            "spotifyId": spotifyId,
+            "accessToken": accessToken,
+            "refreshToken": refreshToken
+        }
+
+        console.log("loginDto: ", loginDto)
+
+        axios.post(url, loginDto)
+            .then(response => {
+                console.log('login.js, 106: ', response);
+                if (response.data) {
+                    console.log('login response: ', response.data.userSpotifyId);
+                    store.commit('SET_USER_SPOTIFY_ID', response.data.userSpotifyId);
+
+                    // push to home?
+                } else {
+                    alert('Failed to login');
+                }
+            }).catch(error => {
+                console.log(error)
+            });
+    },
+    logout() {
+        
+        const url = 'http://localhost:8080/user/logout'
+
+        const logoutDto = {
+            "userSpotifyId": store.getters.userSpotifyId
+        }
+
+        axios.put(url, logoutDto)
+            .then(response => {
+                console.log('Token deleted: ', response.data);
+                // Clear State & LocalStorage
+                store.commit('CLEAR_ALL');
+            }).catch(error => {
+                console.log(error)
+            });
     }
 };
 
