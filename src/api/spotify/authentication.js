@@ -106,8 +106,8 @@ const login = {
             .then(response => {
                 console.log('login.js, 106: ', response);
                 if (response.data) {
-                    console.log('login response: ', response.data.userId);
-                    store.commit('SET_USER_ID', response.data.userId);
+                    console.log('login response: ', response.data.userSpotifyId);
+                    store.commit('SET_USER_SPOTIFY_ID', response.data.userSpotifyId);
 
                     // push to home?
                 } else {
@@ -122,7 +122,7 @@ const login = {
         const url = 'http://localhost:8080/user/logout'
 
         const logoutDto = {
-            "userId": store.getters.userId
+            "userSpotifyId": store.getters.userSpotifyId
         }
 
         axios.put(url, logoutDto)

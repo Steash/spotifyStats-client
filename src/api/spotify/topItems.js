@@ -51,7 +51,7 @@ const topItems = {
                 artistSpotifyId: topArtist.id, 
                 artistName: topArtist.name,
                 rank: index + 1,
-                userId: store.getters.userId,
+                userSpotifyId: store.getters.userSpotifyId,
                 avatar: topArtist.images[2].url
             }
         });

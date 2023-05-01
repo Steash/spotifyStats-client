@@ -5,13 +5,13 @@ export default createStore({
     accessToken: localStorage.getItem('accessToken') || null,
     refreshToken: localStorage.getItem('refreshToken') || null,
     expiresIn: localStorage.getItem('expiresIn') || null,
-    userId: localStorage.getItem('userId') || null,
+    userSpotifyId: localStorage.getItem('userSpotifyId') || null,
   },
   getters: {
     accessToken: (state) => state.accessToken,
     refreshToken: (state) => state.refreshToken,
     expiresIn: (state) => state.expiresIn,
-    userId: (state) => state.userId,
+    userSpotifyId: (state) => state.userSpotifyId,
     isAuthenticated: (state) => !!state.accessToken,
   },
   mutations: {
@@ -27,9 +27,9 @@ export default createStore({
       state.expiresIn = expiresIn;
       localStorage.setItem('expiresIn', expiresIn); 
     },
-    SET_USER_ID(state, userId) {
-      state.userId = userId;
-      localStorage.setItem('userId', userId); 
+    SET_USER_SPOTIFY_ID(state, userSpotifyId) {
+      state.userSpotifyId = userSpotifyId;
+      localStorage.setItem('userSpotifyId', userSpotifyId); 
     },
     CLEAR_ACCESS_TOKEN(state) {
       state.accessToken = null;
@@ -43,19 +43,19 @@ export default createStore({
       state.expiresIn = null;
       localStorage.removeItem('expiresIn');
     },
-    CLEAR_USER_ID(state) {
-      state.userId = null;
-      localStorage.removeItem('userId');
+    CLEAR_USER_SPOTIFY_ID(state) {
+      state.userSpotifyId = null;
+      localStorage.removeItem('userSpotifyId');
     },
     CLEAR_ALL(state) {
       state.accessToken = null;
       state.refreshToken = null;
       state.expiresIn = null;
-      state.userId = null;
+      state.userSpotifyId = null;
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('expiresIn');
-      localStorage.removeItem('userId');
+      localStorage.removeItem('userSpotifyId');
     }
   },
   actions: {

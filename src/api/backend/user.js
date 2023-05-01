@@ -22,19 +22,25 @@ const spotifyUser = {
             console.error(error);
         }
     },
-    async getMutualTopArtists(artistId) {
-        // getMutualTopArtists("0du5cEVh5yTK9QJze8zA0C")
-        const userId = "1125139604"; 
+    async searchUser(query) {
+        const url = "http://localhost:8080/user/search"
+        const requestBody = {
+            searchTerm: query,
+            propertyToSortBy: "displayName",
+            directionOfSort: "asc",
+            pageNumber: 0,
+            numberPerPage: 16
+        }
 
-        const url = `http://localhost:8080/topArtist/get/mutual-fans?artistSpotifyId=${artistId}&userSpotifyId=${userId}`;
-        
         try {
-            const response = await axios.get(url);
+            const response = await axios.post(url, requestBody);
+            console.log("search result: ", response);
             return response.data;
         } catch (error) {
             console.error(error);
         }
-    } 
+    },
+
 }
 
 export default spotifyUser;

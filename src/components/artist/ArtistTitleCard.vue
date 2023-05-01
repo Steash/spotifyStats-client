@@ -79,7 +79,7 @@
 <script>
 import artist from "@/api/spotify/artist"
 import store from "@/store/"
-import user from "@/api/backend/user"
+import topArtist from "@/api/backend/topArtist"
 
 export default {
     data() {
@@ -97,12 +97,14 @@ export default {
         }
     },
     mounted() {
+        this.scrollToTop();
         // console.log("artist Id: " + this.$route.params.id + "token: " + store.getters.accessToken)
         this.getArtistDetail()
         this.getArtistTopTracks()
         // console.log("CONSOLE LOGGINGGGG: ", this.artist.images[0].url)
         // console.log("CONSOLE LOGGINGGGG: ", this.artist[0].name)
         this.getMutuals()
+        
     },
     // props: ['id'],
     methods: {
@@ -117,7 +119,7 @@ export default {
             this.topTracks = await artist.getTopTracks(store.getters.accessToken, this.$route.params.id)
         },
         async getMutuals() {
-            this.mutualFans = await user.getMutualTopArtists("0du5cEVh5yTK9QJze8zA0C")
+            this.mutualFans = await topArtist.getMutualFans("0du5cEVh5yTK9QJze8zA0C") // this.artist.name
         },
         toggleExpandedSongs() {
             this.expandedSongs = !this.expandedSongs
@@ -131,6 +133,9 @@ export default {
         scrollToTarget(id) {
             const targetElement = document.getElementById(id)
             targetElement.scrollIntoView({ behavior: 'smooth'})
+        },
+        scrollToTop() {
+            window.scrollTo(0, 0);
         }
     }
 

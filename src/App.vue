@@ -33,7 +33,15 @@ export default {
   components: {
     NavBar,
     Footer
-  }
+  },
+  // mounted() {
+  //   this.scrollToTop();
+  // },
+  // methods: {
+  //   scrollToTop() {
+  //     window.scrollTo(0, 0);
+  //   }
+  // }
 }
 
 </script>

@@ -21,6 +21,8 @@
 <template>
   <div class="container mx-auto px-4 py-8">
 
+    <SearchBar/>
+
     <!-- artist box -->
     <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2">
         <h1 class="text-2xl font-bold pb-4">My Top Artists</h1>
@@ -77,94 +79,100 @@ import topItems from '../api/spotify/topItems'
 import user from '../api/spotify/user'
 import authentication from '../api/spotify/authentication'
 import store from '../store'
+import SearchBar from './reusables/SearchBar.vue'
 // import { getTopItems } from '../api/topItems';
 
 
 export default {
-  name: 'HelloWorld',
-  data() {
-    return {
-      newArtist: '',
-      token: '',
-      topArtists: '',
-      myProfile: '',
-      user: {
-        displayName: '',
-        spotifyId: '',
-        email: '',
-        country: '',
-        avatar: '',
-        product: '',
-        accessToken: '',
-        refreshToken: ''
-      }
-    }
-  },
-  mounted() {
-    this.getTopArtists()
-    this.getMyProfile()
-  },
-  methods: {
-    async showArtist() {
-      artist.getArtist(this.token).then((data) => {
-        this.newArtist = data;
-      });
+    name: "HelloWorld",
+    data() {
+        return {
+            newArtist: "",
+            token: "",
+            topArtists: "",
+            myProfile: "",
+            user: {
+                displayName: "",
+                spotifyId: "",
+                email: "",
+                country: "",
+                avatar: "",
+                product: "",
+                accessToken: "",
+                refreshToken: ""
+            }
+        };
     },
-    async getToken() {
-      try {
-        const token = await gettoken.getToken();
-        this.token = token;
-      } catch (error) {
-        console.error(error);
-      }
+    mounted() {
+        this.getTopArtists();
+        this.getMyProfile();
     },
-    async getTopArtists() {
-      topItems.getTopItems(store.getters.accessToken, 'artists')
-        .then((data) => {
-          this.topArtists = data;
-          // console.log("top artists" + data);
-        });
+    methods: {
+        async showArtist() {
+            artist.getArtist(this.token).then((data) => {
+                this.newArtist = data;
+            });
+        },
+        async getToken() {
+            try {
+                const token = await gettoken.getToken();
+                this.token = token;
+            }
+            catch (error) {
+                console.error(error);
+            }
+        },
+        async getTopArtists() {
+            topItems.getTopItems(store.getters.accessToken, "artists")
+                .then((data) => {
+                this.topArtists = data;
+                // console.log("top artists" + data);
+            });
+        },
+        async getMyProfile() {
+            user.getSpotifyUser(store.getters.accessToken)
+                .then((data) => {
+                console.log("my profile" + data);
+                this.myProfile = data;
+            });
+        },
+        setUser() {
+            if (this.myProfile != "") {
+                this.user.displayName = this.myProfile.display_name;
+                this.user.spotifyId = this.myProfile.id;
+                this.user.email = this.myProfile.email;
+                this.user.country = this.myProfile.country;
+                this.user.avatar = this.myProfile.images[0].url;
+                this.user.product = this.myProfile.product;
+                this.user.accessToken = store.getters.accessToken; // remove later
+                this.user.refreshToken = store.getters.refreshToken;
+                user.postSpotifyUser(this.user);
+            }
+            else {
+                alert("no profile");
+            }
+        },
+        postMyTopArtists() {
+            if (this.topArtists.length > 0) {
+                topItems.postTopArtist(this.topArtists[0]);
+            }
+            else {
+                alert("No top artists found");
+            }
+        },
+        postAllMyTopArtists() {
+            if (this.topArtists.length > 0) {
+                topItems.postAllTopArtists(this.topArtists);
+            }
+            else {
+                alert("No top artists found");
+            }
+        },
+        logout() {
+            authentication.logout();
+        }
     },
-    async getMyProfile() {
-      user.getSpotifyUser(store.getters.accessToken)
-        .then((data) => {
-          console.log("my profile" + data);
-          this.myProfile = data;
-        });
-    },
-    setUser() {
-      if (this.myProfile != '') {
-        this.user.displayName = this.myProfile.display_name;
-        this.user.spotifyId = this.myProfile.id;
-        this.user.email = this.myProfile.email;
-        this.user.country = this.myProfile.country;
-        this.user.avatar = this.myProfile.images[0].url;
-        this.user.product = this.myProfile.product;
-        this.user.accessToken = store.getters.accessToken; // remove later
-        this.user.refreshToken = store.getters.refreshToken;
-        user.postSpotifyUser(this.user)
-      } else {
-        alert('no profile');
-      }
-    },
-    postMyTopArtists() {
-      if (this.topArtists.length > 0) {
-        topItems.postTopArtist(this.topArtists[0])
-      } else {
-        alert("No top artists found")
-      }
-    },
-    postAllMyTopArtists() {
-      if (this.topArtists.length > 0) {
-        topItems.postAllTopArtists(this.topArtists)
-      } else {
-        alert("No top artists found")
-      }
-    },
-    logout() {
-      authentication.logout();
-    }
-  }
+    components: { SearchBar }
 }
 </script>
   

@@ -14,7 +14,7 @@
                 </div>
             </div>
             <!-- Song box -->
-            <div class="flex-col flex items-start  border-gray-900 p-8 px-10">
+            <!-- <div class="flex-col flex items-start  border-gray-900 p-8 px-10">
                 <h1 class="text-2xl font-bold pb-4">Top Songs</h1>
                 <div class="flex flex-row justify-center align-middle py-2">
                     <h4 class="w-14 px-4  my-auto">1</h4>
@@ -52,7 +52,7 @@
                     <p class="w-54 px-8 my-auto">2:53</p>
                 </div>
                 <button class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View all</button>
-            </div>
+            </div> -->
              <!-- artist box -->
             <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2" id="topArtists-box">
                 <h1 class="text-2xl font-bold pb-4">Top Artists</h1>
@@ -107,18 +107,19 @@
                 <div class="flex-col flex items-start  border-gray-900 p-8 px-10">
                     <h1 class="text-2xl font-bold pb-4">Mutual Top Artists</h1>
 
-                    <div class="flex flex-row justify-center align-middle py-2">
-                        <h4 class="w-14 px-4  my-auto">1</h4>
-                        <img class="w-12 h-12 my-auto" src="https://i1.sndcdn.com/artworks-NpNe0awEZAz9Ol0t-CoGXIA-t500x500.jpg" alt="cover art"> 
-                        <p class="w-82 px-8 pr-72 my-auto">Grentperez</p>
-                        <p class="w-54 px-8 my-auto">57</p>
+                    <div v-for="(artist, index) in this.mutualTopArtists" :key="index" 
+                    class="flex flex-row justify-center align-middle py-2">
+                        <h4 class="w-14 px-4  my-auto">{{ index + 1 }}</h4>
+                        <img class="w-12 h-12 my-auto" :src="artist.artistAvatar" alt="artist"> 
+                        <p class="w-82 px-8 pr-72 my-auto">{{ artist.artistName }}</p>
+                        <p class="w-54 px-8 my-auto">{{ artist.topArtistRank }}</p>
                     </div>
     
                     <button class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View all</button>
                 </div>
 
                 <!-- Top Artist box -->
-                <div class="flex-col flex items-start  border-gray-900 p-8 px-10">
+                <!-- <div class="flex-col flex items-start  border-gray-900 p-8 px-10">
                     <h1 class="text-2xl font-bold pb-4">Mutual Top Songs</h1>
 
                     <div class="flex flex-row justify-center align-middle py-2">
@@ -129,7 +130,7 @@
                     </div>
     
                     <button class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View all</button>
-                </div>
+                </div> -->
 
     </div>
     </div>
@@ -138,6 +139,7 @@
 
 <script>
 import user from "@/api/backend/user.js"
+import topArtist from "@/api/backend/topArtist.js"
 // import store from "@/store/"
 
 export default {
@@ -149,6 +151,7 @@ export default {
             user: '',
             topArtists: '',
             expandedArtists: false,
+            mutualTopArtists: ''
         }
     },
     computed: {
@@ -159,6 +162,7 @@ export default {
     mounted() {
         this.getUserProfile()
         this.getUserTopArtists()
+        this.getMutualTopArtists()
     },
     // props: ['id'],
     methods: {
@@ -182,6 +186,9 @@ export default {
         scrollToTarget(id) {
             const targetElement = document.getElementById(id)
             targetElement.scrollIntoView({ behavior: 'smooth'})
+        },
+        async getMutualTopArtists() {  
+            this.mutualTopArtists = await topArtist.getMutualTopArtists("g324534wtgv")
         }
     }
 
