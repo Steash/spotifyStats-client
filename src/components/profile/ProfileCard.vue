@@ -6,11 +6,13 @@
             <!-- Title box -->
             <div class="flex flex-row rounded-xl bg-zinc-800 p-10 ">
                 <div class="w-28 h-28 rounded-full overflow-hidden my-auto mr-6">
-                    <img class="w-full h-auto my-auto" :src="this.user.avatar" alt="cover art">
+                    <img class="w-full h-auto my-auto" :src="user.avatar" alt="cover art">
                 </div>
                 <div class="flex-col flex items-start my-auto justify-center ">
-                    <h1 class="text-6xl text-white font-semibold pt- pb-4"> {{ this.user.displayName }}</h1>
-                    <h4 class="text-white pl-1">3 common favorite artists</h4>
+                    <h1 class="text-6xl text-white font-semibold pt- pb-4"> {{ user.displayName }}</h1>
+                    <!-- <h4 v-if="!ownProfile" class="text-white pl-1">{{ mutualTopArtists.length }} mutual favorite artists</h4> -->
+                    <button v-if="!ownProfile" @click="scrollToTarget('mutual-topartist-box')" class="text-white pl-1">{{ mutualTopArtists.length }} mutual favorite artists</button>
+                    <h4 v-if="ownProfile" class="text-white pl-1">Your profile</h4>
                 </div>
             </div>
             <!-- Song box -->
@@ -104,7 +106,7 @@
                     <button class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View all</button>
                 </div> -->
                 <!-- Top Artist box -->
-                <div class="flex-col flex items-start  border-gray-900 p-8 px-10">
+                <div v-if="!ownProfile" class="flex-col flex items-start  border-gray-900 p-8 px-10" id="mutual-topartist-box">
                     <h1 class="text-2xl font-bold pb-4">Mutual Top Artists</h1>
 
                     <div v-for="(artist, index) in this.mutualTopArtists" :key="index" 
@@ -140,7 +142,7 @@
 <script>
 import user from "@/api/backend/user.js"
 import topArtist from "@/api/backend/topArtist.js"
-// import store from "@/store/"
+import store from "@/store/"
 
 export default {
     data() {
@@ -151,7 +153,8 @@ export default {
             user: '',
             topArtists: '',
             expandedArtists: false,
-            mutualTopArtists: ''
+            mutualTopArtists: '',
+            ownProfile: false
         }
     },
     computed: {
@@ -163,16 +166,16 @@ export default {
         this.getUserProfile()
         this.getUserTopArtists()
         this.getMutualTopArtists()
+        if (this.$route.params.id == store.getters.userSpotifyId) {
+            this.ownProfile = true
+        }
     },
-    // props: ['id'],
     methods: {
         async getUserProfile() {
             this.user = await user.getUser(this.$route.params.id)
         },
         async getUserTopArtists() {
             this.topArtists = await user.getTopArtists(this.$route.params.id)
-
-            console.log('test: ', this.topArtists[2])
         },
         toggleExpandedArtists() {
             this.expandedArtists = !this.expandedArtists
@@ -188,8 +191,8 @@ export default {
             targetElement.scrollIntoView({ behavior: 'smooth'})
         },
         async getMutualTopArtists() {  
-            this.mutualTopArtists = await topArtist.getMutualTopArtists("g324534wtgv")
-        }
+            this.mutualTopArtists = await topArtist.getMutualTopArtists(this.$route.params.id)
+        },
     }
 
 };
