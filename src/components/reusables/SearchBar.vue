@@ -5,6 +5,14 @@
             </div>
         </div>
     </div> -->
+    <!-- <form action="" class="relative mx-auto w-max">
+        <input type="text" v-model="searchTerm" v-on:input="debouncedSearch"
+              class="peer cursor-pointer relative z-10 h-12 w-12 rounded-full border bg-transparent pl-12 outline-none focus:w-full focus:cursor-text focus:border-lime-300 focus:pl-16 focus:pr-4" />
+        <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-y-0 my-auto h-8 w-12 border-r border-transparent stroke-gray-500 px-3.5 peer-focus:border-lime-300 peer-focus:stroke-lime-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+    </form> -->
+
     <div class="max-w-lg mx-auto">
         <!-- Search Bar -->
         <form class="flex items-center">
@@ -20,7 +28,7 @@
                     </svg>
                 </div>
 
-                <input v-model="searchTerm" type="text" id="simple-search" 
+                <input v-model="searchTerm" type="text" id="simple-search"  v-on:input="debouncedSearch"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
                         focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" 
                 placeholder="Search" required>
@@ -47,7 +55,9 @@
             <div v-if="users.length> 0" class="flex flex-col items-start">
 
                 <div v-for="user in users" :key="user.spotifyId" class="w-full">
-                    <router-link :to="'/user/' + user.spotifyId" class="flex flex-row w-full p-3 pl-4 hover:bg-gray-300 rounded-lg cursor-pointer" >
+                    
+                    <router-link :to="{ name: 'UserDetail', params: { id: user.spotifyId } }" 
+                    class="flex flex-row w-full p-3 pl-4 hover:bg-gray-300 cursor-pointer border-b border-gray-100" >
                         <div class="mr-4">
                             <div class="h-9 w-9 rounded-sm flex items-center justify-center text-3xl">
                                 <img class="w-full h-auto my-auto" :src="user.avatar" alt="cover art">
@@ -55,12 +65,27 @@
                         </div>
                     
                         <div>
-                            <div class="font-bold text-lg">{{ user.displayName }}</div>
+                            <div class="font-semibold ">{{ user.displayName }}</div>
                             <!-- <div class="text-xs text-gray-500">
                                 <span class="mr-2">No: 007886</span>
                                 <span class="mr-2">gender: man</span>
                                 <span class="mr-2">hobby: skiing</span>
                             </div> -->
+                        </div>
+                    </router-link>
+
+                </div>
+                <div v-for="artist in artists" :key="artist.spotifyId" class="w-full">
+                    <router-link :to="{ name: 'ArtistDetail', params: { id: artist.spotifyId } }" 
+                    class="flex flex-row w-full p-3 pl-4 hover:bg-gray-300 cursor-pointer border-b border-gray-100" >
+                        <div class="mr-4">
+                            <div class="h-9 w-9 rounded-sm flex items-center justify-center text-3xl">
+                                <img class="w-full h-auto my-auto" :src="artist.avatar" alt="cover art">
+                            </div>
+                        </div>
+                    
+                        <div>
+                            <div class="font-semibold ">{{ artist.name }}</div>
                         </div>
                     </router-link>
 
@@ -72,97 +97,50 @@
         
     </div>
 
-
-
-
-
-
-
-    <!-- <form action="" class="relative mx-auto w-max">
-        <input type="search" v-model="searchTerm" class="peer cursor-pointer relative z-10 h-12 w-12 
-                    rounded-full border bg-transparent pl-12 outline-none 
-                    focus:w-full focus:cursor-text focus:border-gray-700 focus:pl-16 focus:pr-4" />
-
-        <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-y-0 my-auto h-8 w-12 
-                        border-r border-transparent stroke-gray-500 px-3.5 
-                        peer-focus:border-gray-700 peer-focus:stroke-gray-700" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            @click="search(searchTerm)"
-        </svg>
-    </form>
-
-    <form action="" class="relative mx-auto w-max">
-        <input type="search" v-model="searchTerm"
-            class="peer cursor-pointer relative z-10 h-12 w-12 rounded-full border bg-transparent pl-12 outline-none focus:w-full focus:cursor-text focus:border-green-700 focus:pl-16 focus:pr-4" />
-
-        <svg xmlns="http://www.w3.org/2000/svg"
-            class="absolute inset-y-0 my-auto h-8 w-12 border-r border-transparent stroke-gray-500 px-3.5 peer-focus:border-green-700 peer-focus:stroke-green-700"
-            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            @click="search(searchTerm)"
-        </svg>
-    </form> -->
-
-
-    <!-- <div>
-        <input v-model="searchTerm" placeholder="Search...">
-        <button @click="search(searchTerm)">Search</button>
-    </div> -->
-
-    <!-- <form action="" class="relative mx-auto w-max">
-        <input type="search" v-model="searchTerm"
-            class="peer cursor-pointer relative z-10 h-12 w-12 rounded-full border bg-transparent pl-12 outline-none focus:w-full focus:cursor-text focus:border-green-700 focus:pl-16 focus:pr-4" />
-
-        <button @click="search(searchTerm)"
-            class="absolute inset-y-0 right-0 my-auto h-8 w-12 border-l border-transparent stroke-gray-500 px-3.5 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-6 h-6">
-                <path fill-rule="evenodd"
-                    d="M15.707 14.293a1 1 0 0 1-1.414 1.414l-3.142-3.142a5 5 0 1 1 .708-.708l3.142 3.142zM6 10a4 4 0 1 1 8 0a4 4 0 0 1-8 0z"
-                    clip-rule="evenodd" />
-            </svg>
-        </button>
-    </form>
-
-    <div class="my-4">
-        <div v-if="users.length > 0" class="bg-gray-100 p-2 rounded-md">
-            <div v-for="user in users" :key="user.spotifyId">
-                <router-link :to="'/user/' + user.spotifyId">
-                    <div class="hover:bg-gray-100 p-2 cursor-pointer">
-                        <img class="w-full h-auto my-auto" :src="user.avatar" alt="cover art">
-                        {{ user.displayName }}</div>
-                    
-                </router-link>
-            </div>
-        </div>
-        <div v-else>No results found.</div>
-    </div> -->
-
-   
 </template>
 
 <script>
 import user from "@/api/backend/user"
+import artist from "@/api/backend/artist"
+import _ from 'lodash'
 
 export default {
     data() {
         return {
             users: [],
-            currentPage: 0,
+            artists: [],
+            // currentPage: 0,
             searching: false,
+            searchTerm: '',
         }
+    },
+    watch: {
+        searchTerm: _.debounce(function(newSearchTerm) {
+            this.search(newSearchTerm)
+        }, 500)
     },
     mounted() {
     },
+    // computed: {
+    //     debouncedSearch: _.debounce(function() {
+    //         this.search(searchTerm)
+    //     }, 500)
+    // },
     methods: {
         async search(searchTerm) {
             console.log(`Searching`, searchTerm)
             this.searching = true;
-            const rsp = await user.searchUser(searchTerm)
+            const users = await user.searchUser(searchTerm)
 
-            this.users = rsp.content;
+            this.users = users.content;
+
+            const artists = await artist.searchArtist(searchTerm)
+
+            this.artists = artists.content;
+
+
             // this.currentPage = pageNumber
-            this.totalPages = rsp.totalPages
+            // this.userTotalPages = users.totalPages
         },
         clearSearch() {
             this.searching = false;

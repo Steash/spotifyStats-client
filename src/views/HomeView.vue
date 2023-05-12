@@ -1,32 +1,26 @@
 <template>
-    <div class="flex flex-col min-h-screen">
-        <h3 class="items-center font-semibold text-xl p-8 mx-auto text-gray-600">
-            Access the information that Spotify doesn't provide
-        </h3>   
-
-        <h3 class="items-center font-semibold text-xl p-8 mx-auto text-gray-600">
-            Find out which friends have common music interest
-        </h3>   
-
-        <h3 class="items-center font-semibold text-xl p-8 mx-auto text-gray-600">
-            See which friends Listen to the same artists
-        </h3>   
-
-        <h3 class="items-center font-semibold text-xl p-8 mx-auto text-gray-600">
-            See which friends Listen to the same artists
-        </h3>   
-    </div>
-    
-    
+  <div class="home">
+    <InfoPage v-if="!store.getters.userSpotifyId"></InfoPage>
+    <SpotifyStats v-if="store.getters.userSpotifyId"></SpotifyStats>
+  </div>
 </template>
-
+  
 <script>
+import InfoPage from '@/components/home/InfoPage.vue';
+import SpotifyStats from '@/components/home/SpotifyStats.vue';
+import store from '@/store'
 
 export default {
-  name: 'LoginView',
+  name: 'HomeView',
+  data() {
+    return {
+      store
+    }
+  },
   components: {
-
-
+    InfoPage,
+    SpotifyStats
   }
 }
 </script>
+

@@ -13,7 +13,7 @@ const spotifyUser = {
 
         try {
             const response = await axios.get(url, config);
-            console.log('user response', response.data);
+            // console.log('user response', response.data);
             return response.data;
         } catch (error) {
             console.error(error);

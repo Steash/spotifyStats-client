@@ -81,7 +81,6 @@ export default {
     },
     methods: {
         logout() {
-            console.log("logged out")
             authentication.logout();
         },
         async onLogin() {
@@ -89,8 +88,8 @@ export default {
 
         },
         async authorize() {
-            const token = await authentication.authorize();
-            console.log('logged in token: ' + token);
+            await authentication.authorize();
+            // console.log('logged in token: ' + token);
         }
     }
 }
