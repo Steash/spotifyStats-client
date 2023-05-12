@@ -52,7 +52,7 @@
 
                             <span>|</span>
                             <!-- Sign In -->
-                            <router-link :to="{ name: 'UserDetail', params: { id: store.state.userId } }"
+                            <router-link :to="{ name: 'UserDetail', params: { id: store.state.userSpotifyId } }"
                                 class=" hover:text-gray-200 mx-2 text-white">
                                 <span class="material-symbols-outlined align-middle">account_circle</span>
                             </router-link>
@@ -81,7 +81,6 @@ export default {
     },
     methods: {
         logout() {
-            console.log("logged out")
             authentication.logout();
         },
         async onLogin() {
@@ -89,8 +88,8 @@ export default {
 
         },
         async authorize() {
-            const token = await authentication.authorize();
-            console.log('logged in token: ' + token);
+            await authentication.authorize();
+            // console.log('logged in token: ' + token);
         }
     }
 }

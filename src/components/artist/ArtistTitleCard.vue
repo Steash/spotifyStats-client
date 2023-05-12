@@ -54,12 +54,14 @@
                     <h1 class="text-2xl font-bold pb-4">Friends who also listen to {{ this.artist.name }}</h1>
                     
                     <div>
-                        <div v-for="(user, index) in this.mutualFans" :key="index" class="flex flex-row items-center py-2">
-                            <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
-                            <img class="w-12 h-12 my-auto" :src="user.avatar" alt="user">
-                            <div class="flex flex-row items-start justify-between flex-1 pl-4">
-                                <p class="w-full md:w-96 px-2">{{ user.displayName }}</p>
-                            </div>
+                        <div v-for="(user, index) in this.mutualFans" :key="index" >
+                            <router-link :to="{ name: 'UserDetail', params: { id: user.userSpotifyId } }" class="flex flex-row items-center py-2">
+                                <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
+                                <img class="w-12 h-12 my-auto" :src="user.avatar" alt="user">
+                                <div class="flex flex-row items-start justify-between flex-1 pl-4">
+                                    <p class="w-full md:w-96 px-2">{{ user.displayName }}</p>
+                                </div>
+                            </router-link>
                         </div>
                         <!-- <button @click="toggleExpandedSongs" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View more</button> -->
                     </div>
@@ -120,6 +122,7 @@ export default {
         },
         async getMutuals() {
             this.mutualFans = await topArtist.getMutualFans("0du5cEVh5yTK9QJze8zA0C") // this.artist.name
+            console.log("mutualists: ", this.mutualFans)
         },
         toggleExpandedSongs() {
             this.expandedSongs = !this.expandedSongs

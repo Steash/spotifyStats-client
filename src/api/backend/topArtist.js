@@ -1,4 +1,5 @@
 import axios from 'axios';
+import store from '@/store'
 
 const topArtist = {
     async getMutualFans(artistId) {
@@ -16,7 +17,7 @@ const topArtist = {
     },
     async getMutualTopArtists(userId) {
         // getMutualTopArtists("g324534wtgv")
-        const currentUserId = "1125139604"; 
+        const currentUserId = store.getters.userSpotifyId; 
 
         const url = `http://localhost:8080/topArtist/get/mutual-topArtists?userSpotifyId1=${userId}&userSpotifyId2=${currentUserId}`;
         

@@ -4,6 +4,7 @@ import AboutView from '../views/AboutView.vue'
 import ArtistDetailView from '../views/detail-pages/ArtistDetailView.vue'
 import UserDetailView from '../views/detail-pages/UserDetailView.vue'
 import HomeView from '../views/HomeView.vue'
+import LoginView from '../views/LoginView.vue'
 
 const routes = [
   {
@@ -30,7 +31,12 @@ const routes = [
     path: '/test',
     name: 'TestView',
     component: TestView
-  }
+  },
+  {
+    path: '/login',
+    name: 'LoginView',
+    component: LoginView
+  },
 ]
 
 const router = createRouter({

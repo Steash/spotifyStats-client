@@ -18,6 +18,7 @@ const topItems = {
                     offset,
                 },
             });
+            console.log(response.data.items);
             return response.data.items;
         } catch (error) {
             console.error(error);

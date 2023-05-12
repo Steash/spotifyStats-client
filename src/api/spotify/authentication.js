@@ -7,6 +7,7 @@ const login = {
     clientSecret: '74f45fda80ab4b1c846ff984996ce94c',
     redirectUri: 'http://localhost:8081/',
     scopes: ['user-top-read', 'user-read-private', 'user-read-email'], 
+    state: '12345678',
 
     /**
      * Logs the user in and obtains an access token and refresh token.
@@ -16,14 +17,35 @@ const login = {
         const code = await this.getCode()
         const tokens = await this.getTokens(code)
 
-        let spotifyRsp = await user.getSpotifyUser(tokens.accessToken)
-        let spotifyId = spotifyRsp.id
+        // Retrieving user profile
+        const myProfile = await user.getSpotifyUser(tokens.accessToken)
+        // const spotifyId = myProfile.id
 
-        console.log('spotifyId: ', spotifyId)
+        // console.log('spotifyId: ', spotifyId)
+
+
 
         // login
+        
+        // try this first
         console.log("logging in...")
-        await this.login(spotifyId, tokens.accessToken, tokens.refreshToken)
+        this.login(myProfile, tokens.accessToken, tokens.refreshToken)
+        // const rsp = await this.login(spotifyId, tokens.accessToken, tokens.refreshToken)
+        // console.log("login response: ",  rsp)
+
+        // let rsp = false;
+        // while (!rsp) {
+        //     rsp = await this.login(spotifyId, tokens.accessToken, tokens.refreshToken)
+        // }
+        // this.login(spotifyId, tokens.accessToken, tokens.refreshToken).then((rsp) => {
+        //     console.log("response from login", rsp)
+        //     // if (rsp.status !== 200) {
+        //     //     console.log
+        // })
+
+        // // else try post user and then log user in
+        // // Posting user
+        // const postUserRsp = setUser(myProfile)
 
         // window.location = this.redirectUri;
 
@@ -34,7 +56,7 @@ const login = {
      * Redirects the user to the Spotify authorization page.
      */
     loginSpotify() {
-        const url = `https://accounts.spotify.com/authorize?response_type=code&client_id=${this.clientId}&scope=${encodeURIComponent(this.scopes.join(' '))}&redirect_uri=${encodeURIComponent(this.redirectUri)}`;
+        const url = `https://accounts.spotify.com/authorize?response_type=code&client_id=${this.clientId}&scope=${encodeURIComponent(this.scopes.join(' '))}&redirect_uri=${encodeURIComponent(this.redirectUri)}&state=${this.state}`;
         
         window.location = url;
     },
@@ -72,7 +94,7 @@ const login = {
         try {
             const response = await axios.post(url, data, config);
 
-            console.log(response);
+            // console.log(response);
 
             const tokens = {
                 accessToken: response.data.access_token,
@@ -91,31 +113,36 @@ const login = {
             throw new Error('Failed to retrieve access token');
         }
     },
-     async login(spotifyId, accessToken, refreshToken) {
+    async login(myProfile, accessToken, refreshToken) {
+        console.log(myProfile)
+
         const url = 'http://localhost:8080/user/login'
 
         const loginDto = {
-            "spotifyId": spotifyId,
+            "spotifyId": myProfile.id,
             "accessToken": accessToken,
             "refreshToken": refreshToken
         }
 
-        console.log("loginDto: ", loginDto)
+        try {
+            const response = await axios.post(url, loginDto)
 
-        axios.post(url, loginDto)
-            .then(response => {
-                console.log('login.js, 106: ', response);
-                if (response.data) {
-                    console.log('login response: ', response.data.userSpotifyId);
-                    store.commit('SET_USER_SPOTIFY_ID', response.data.userSpotifyId);
+            if (response.data) {
+                console.log('login response: ', response.data.userSpotifyId);
+                store.commit('SET_USER_SPOTIFY_ID', response.data.userSpotifyId);
+                // push to home?
+                return
+            } 
+        } catch (error) {
+            console.log(error);
+            throw new Error('Failed to retrieve access token');
+        }
 
-                    // push to home?
-                } else {
-                    alert('Failed to login');
-                }
-            }).catch(error => {
-                console.log(error)
-            });
+        console.log('Setting user');
+        await this.setUser(myProfile)
+        await this.login(myProfile, accessToken, refreshToken)
+
+        
     },
     logout() {
         
@@ -133,6 +160,24 @@ const login = {
             }).catch(error => {
                 console.log(error)
             });
+    },
+    setUser(myProfile) {
+        const profile = {
+            displayName : myProfile.display_name,
+            spotifyId : myProfile.id,
+            email : myProfile.email,
+            country : myProfile.country,
+            avatar : 'https://rugby.vlaanderen/wp-content/uploads/2018/03/Anonymous-Profile-pic.jpg',
+            product : myProfile.product,
+            accessToken : store.getters.accessToken,
+            refreshToken : store.getters.refreshToken
+        }
+
+        if (myProfile.images.length > 0) {
+            user.avatar = myProfile.images[0].url
+        }
+
+        return user.postSpotifyUser(profile);
     }
 };
 
