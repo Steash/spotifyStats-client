@@ -1,26 +1,6 @@
-<!-- <template>
-    <h1 class="text-2xl font-bold pb-4">My top artists</h1>
-
-    <ol>
-        <li v-for="item in topArtists" :key="item.id">
-            
-            <router-link :to="{name: 'ArtistDetail', params:{id: item.id }}" class="hover:text-gray-200">{{ item.name }}</router-link>
-        </li>
-    </ol>
-
-    <h1 class="text-2xl font-bold pb-4">My profile</h1>
-    {{ this.user.displayName }}: {{ this.user.email }} - id: {{ this.user.spotifyId }} - country: {{ this.user.country }} - product: {{ this.user.product }} 
-    <img :src="this.user.avatar" />
-    <button class="border border-gray-800 rounded-lg p-2 m-2" @click="setUser()">Register this user</button>
-    <button class="border border-gray-800 rounded-lg p-2 m-2" @click="postMyProfile()">post profile</button>
-    <button class="border border-gray-800 rounded-lg p-2 m-2" @click="postMyTopArtists()">postTopArtist</button>
-    <button class="border border-gray-800 rounded-lg p-2 m-2" @click="logout()">Logout</button>
-    <button class="border border-gray-800 rounded-lg p-2 m-2" @click="postAllTopArtists()">Post all Top Artists</button>
-</template> -->
-
 <template>
   <div class="container mx-auto px-4 py-8">
-
+    <friendsList/>
 
     <SearchBar/>
 
@@ -43,7 +23,7 @@
     </div>
 
 
-    <div class="my-8">
+    <!-- <div class="my-8">
       <h1 class="text-3xl font-bold mb-4">My Profile</h1>
       <p class="text-lg mb-4">
         {{ this.user.displayName }} - {{ this.user.email }} - id:
@@ -68,7 +48,7 @@
           Post all Top Artists
         </button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
   
@@ -78,10 +58,11 @@ import artist from '../api/spotify/artist'
 import gettoken from '../api/spotify/token'
 import topItems from '../api/spotify/topItems'
 import user from '../api/spotify/user'
-import authentication from '../api/spotify/authentication'
+// import authentication from '../api/spotify/authentication'
 import store from '../store'
 import SearchBar from './reusables/SearchBar.vue'
 // import { getTopItems } from '../api/topItems';
+import friendsList from '@/components/friends/friendsList.vue'
 
 
 export default {
@@ -101,18 +82,19 @@ export default {
                 product: "",
                 accessToken: "",
                 refreshToken: ""
-            }
-        };
+            },
+        }
     },
     mounted() {
-        this.getTopArtists();
-        this.getMyProfile();
+        this.getTopArtists()
+        this.getMyProfile()
+
     },
     methods: {
         async showArtist() {
             artist.getArtist(this.token).then((data) => {
                 this.newArtist = data;
-            });
+            })
         },
         async getToken() {
             try {
@@ -169,11 +151,14 @@ export default {
                 alert("No top artists found");
             }
         },
-        logout() {
-            authentication.logout();
-        }
+        // logout() {
+        //     authentication.logout();
+        // }
     },
-    components: { SearchBar }
+    components: { 
+        SearchBar, 
+        friendsList 
+    }
 }
 </script>
   

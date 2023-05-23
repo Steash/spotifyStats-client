@@ -5,6 +5,7 @@ import ArtistDetailView from '../views/detail-pages/ArtistDetailView.vue'
 import UserDetailView from '../views/detail-pages/UserDetailView.vue'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
+import ButtonTestView from '../views/ButtonTestView.vue'
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: '/login',
     name: 'LoginView',
     component: LoginView
+  },
+  {
+    path: '/button',
+    name: 'ButtonTestView',
+    component: ButtonTestView
   },
 ]
 

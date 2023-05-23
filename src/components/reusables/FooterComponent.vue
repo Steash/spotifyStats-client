@@ -5,7 +5,7 @@
             <div class="sm:flex sm:items-center sm:justify-between">
                 <a href="#" target="_blank" class="flex items-center mb-4 sm:mb-0">
                     <!-- <img src="https://flowbite.com/docs/images/logo.svg" class="mr-4 h-8" alt="Flowbite Logo" /> -->
-                    <span class="self-center text-xl font-semibold whitespace-nowrap text-white">SpotifyStats</span>
+                    <span class="self-center text-xl font-semibold whitespace-nowrap text-white">ConcertBuddies</span>
                 </a>
                 <ul class="flex flex-wrap items-center mb-6 sm:mb-0">
                     <li>
@@ -25,7 +25,7 @@
                 </ul>
             </div>
             <hr class="my-6 sm:mx-auto border-gray-700 lg:my-8" />
-            <span class="block text-sm sm:text-center text-gray-400">© 2023 <a href="" target="_blank" class="hover:underline">SpotifyStats™</a>. All Rights Reserved.
+            <span class="block text-sm sm:text-center text-gray-400">© 2023 <a href="" target="_blank" class="hover:underline">ConcertBuddies</a>. All Rights Reserved.
         </span>
         </footer>
     </div>

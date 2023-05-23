@@ -13,7 +13,7 @@
                 <div class="px-4   flex w-full items-center justify-between text-white">
                     <div id="left">
                         <router-link to="/" class="text-3xl font-bold font-heading">
-                            <h1 class="text-white">SpotifyStats</h1>
+                            <h1 class="text-white">ConcertBuddies</h1>
                             <!-- <img
                                     src="https://www.workingtalent.nl/_nuxt/img/wt-logo-white.8cc9feb.svg" title="Logo"
                                     alt="Logo"> -->
@@ -23,7 +23,7 @@
                     <!-- Nav Links -->
                     <div id="middle">
                     <ul class="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-12 text-white">
-                        <li><router-link to="/test" class="hover:text-gray-200 text-white">Test</router-link></li>
+                        <!-- <li><router-link to="/test" class="hover:text-gray-200 text-white">Test</router-link></li> -->
                         </ul>
                     </div>
 
