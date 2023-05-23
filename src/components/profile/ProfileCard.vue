@@ -9,7 +9,19 @@
                     <img class="w-full h-auto my-auto" :src="user.avatar" alt="cover art">
                 </div>
                 <div class="flex-col flex items-start my-auto justify-center ">
-                    <h1 class="text-6xl text-white font-semibold pt- pb-4"> {{ user.displayName }}</h1>
+                    <div class="flex flex-row items-center">
+                        <h1 class="text-6xl text-white font-semibold pt- pb-4"> {{ user.displayName }}</h1>
+                        <div v-if="!ownProfile">
+                            <button v-if="!friends" @click="sendFriendRequest(user.spotifyId)">
+                                <span class="material-symbols-outlined p-4 text-white hover:text-green-400">person_add</span>
+                            </button>
+                            <button v-if="friends" @click="sendFriendRequest(user.spotifyId)">
+                                <span class="material-symbols-outlined p-4 text-white hover:text-green-400">person_remove</span>
+                            </button>
+                            <!-- {{  friends }} -->
+                            <!-- <button @click="print">print </button> -->
+                        </div>
+                    </div>
                     <!-- <h4 v-if="!ownProfile" class="text-white pl-1">{{ mutualTopArtists.length }} mutual favorite artists</h4> -->
                     <button v-if="!ownProfile" @click="scrollToTarget('mutual-topartist-box')" class="text-white pl-1">{{ mutualTopArtists.length }} mutual favorite artists</button>
                     <h4 v-if="ownProfile" class="text-white pl-1">Your profile</h4>
@@ -20,6 +32,7 @@
                 <NoData/>
             </div>
 
+            <!-- Top Artist box -->
             <div v-if="topArtists.length > 0">
                 <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2" id="topArtists-box">
                     <h1 class="text-2xl font-bold pb-4">Top Artists</h1>
@@ -27,6 +40,7 @@
                     
                     <div v-if="!expandedArtists">
                         <div v-for="(artist, index) in this.topFiveArtists" :key="index" class="flex flex-row items-center py-2">
+
                             <h4 class="w-14 px-6 my-auto text-center">{{ artist.rank }}</h4>
                             <img class="w-12 h-12 my-auto" :src="artist.avatar" alt="cover art">
                             <div class="flex flex-row items-start justify-between flex-1 pl-4">
@@ -55,17 +69,24 @@
                     </div>
                     
                 </div>
-                <!-- Top Artist box -->
+
+                <!-- Mutual Top Artist box -->
                 <div v-if="!ownProfile" class="flex-col flex items-start  border-gray-900 p-8 px-10" id="mutual-topartist-box">
                     <h1 class="text-2xl font-bold pb-4">Mutual Top Artists</h1>
 
                     <div v-if="mutualTopArtists.length > 0">
                         <div v-for="(artist, index) in this.mutualTopArtists" :key="index" 
                         class="flex flex-row justify-center align-middle py-2">
-                            <h4 class="w-14 px-4  my-auto">{{ index + 1 }}</h4>
-                            <img class="w-12 h-12 my-auto" :src="artist.artistAvatar" alt="artist"> 
-                            <p class="w-82 px-8 pr-72 my-auto">{{ artist.artistName }}</p>
-                            <p class="w-54 px-8 my-auto">{{ artist.topArtistRank }}</p>
+
+                            <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
+                            <img class="w-12 h-12 my-auto" :src="artist.artistAvatar" alt="cover art">
+                            <div class="flex flex-row items-start justify-between flex-1 pl-4">
+                                <router-link :to="{ name: 'ArtistDetail', params: { id: artist.artistSpotifyId } }" class="text-lg hover:text-gray-200">
+                                <!-- <p class="w-full md:w-96 px-2">{{ artist.name }}</p> -->
+                                {{ artist.artistName }}
+                                </router-link>
+                            </div>
+                            <!-- <p class="w-54 px-8 my-auto">{{ artist.topArtistRank }}</p> -->
                         </div>
         
                         <button class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View all</button>
@@ -86,6 +107,7 @@ import user from "@/api/backend/user.js"
 import topArtist from "@/api/backend/topArtist.js"
 import store from "@/store/"
 import NoData from "@/components/reusables/NoData.vue";
+import friend from "@/api/backend/friend"
 
 export default {
     data() {
@@ -97,7 +119,8 @@ export default {
             topArtists: '',
             expandedArtists: false,
             mutualTopArtists: '',
-            ownProfile: false
+            ownProfile: false,
+            friends: false,
         }
     },
     components: {
@@ -111,13 +134,16 @@ export default {
             return `https://open.spotify.com/user/${store.getters.userSpotifyId}`
         }
     },
-    mounted() {
-        this.getUserProfile()
-        this.getUserTopArtists()
-        this.getMutualTopArtists()
+    async mounted() {
+
+        await this.getUserProfile()
+        await this.getUserTopArtists()
+        await this.getMutualTopArtists()
         if (this.$route.params.id == store.getters.userSpotifyId) {
             this.ownProfile = true
         }
+        await this.isFriend(this.user.spotifyId)
+        
     },
     methods: {
         async getUserProfile() {
@@ -142,6 +168,18 @@ export default {
         async getMutualTopArtists() {  
             this.mutualTopArtists = await topArtist.getMutualTopArtists(this.$route.params.id)
         },
+        async sendFriendRequest(receiverId) {
+            const rsp = await friend.sendFriendRequest(receiverId)
+            alert(rsp)
+        },
+        async isFriend(friendId) {
+            this.friends = await friend.isFriend(friendId)
+            console.log("isFriend: " + this.friends)
+        },
+        print() {
+            console.log("print: " + this.friends)
+        }
+
     }
 
 };
