@@ -3,7 +3,7 @@
 
         <!-- Music buddies -->
 
-        <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2">
+        <div class="flex-col items-center p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2">
             <h1 class="text-2xl font-bold pb-4" id="topArtists-box">Your Music Buddies</h1>
             
             <div v-if="musicBuddies">
@@ -24,6 +24,11 @@
                 </div>
                 <!-- <button @click="toggleExpandedArtists" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View less</button> -->
             </div>
+            <div v-if="!musicBuddies">
+                <p class="text-gray-500 py-2">There are no common mutual top artists found between you and your friends. </p>
+                <p class="text-gray-500 py-2">Consider adding more friends to discover who your music buddies are!</p>
+            </div>
+            
         </div>
 
 
