@@ -1,5 +1,6 @@
 <template>
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-8 flex flex-col items-center">
+        <!-- <div class="py-8 px-10 pb-20 flex mx-auto flex-col items-center"></div> -->
 
         <!-- Music buddies -->
 
@@ -7,7 +8,7 @@
             <h1 class="text-2xl font-bold pb-4" id="topArtists-box">Your Music Buddies</h1>
             
             <div v-if="musicBuddies">
-                <h3 class="font-bold text-base pl-96">Mutual Top Artists</h3> 
+                <!-- <h3 class="font-bold text-sm pl-96">Mutual Top Artists</h3>  -->
                 
                 <div v-for="(musicBuddy, index) in musicBuddies" :key="index" class="flex flex-row items-center py-2">
                     <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>

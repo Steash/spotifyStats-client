@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <friendsList/>
+    <!-- <friendsList/> -->
 
     <SearchBar/>
 
@@ -62,7 +62,7 @@ import user from '../api/spotify/user'
 import store from '../store'
 import SearchBar from './reusables/SearchBar.vue'
 // import { getTopItems } from '../api/topItems';
-import friendsList from '@/components/friends/friendsList.vue'
+// import friendsList from '@/components/friends/friendsList.vue'
 
 
 export default {
@@ -157,7 +157,7 @@ export default {
     },
     components: { 
         SearchBar, 
-        friendsList 
+        // friendsList 
     }
 }
 </script>

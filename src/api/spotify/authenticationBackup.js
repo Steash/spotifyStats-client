@@ -19,11 +19,35 @@ const login = {
 
         // Retrieving user profile
         const myProfile = await user.getSpotifyUser(tokens.accessToken)
-        
+        // const spotifyId = myProfile.id
+
+        // console.log('spotifyId: ', spotifyId)
+
+
+
         // login
+        
         // try this first
         console.log("logging in...")
         this.login(myProfile, tokens.accessToken, tokens.refreshToken)
+        // const rsp = await this.login(spotifyId, tokens.accessToken, tokens.refreshToken)
+        // console.log("login response: ",  rsp)
+
+        // let rsp = false;
+        // while (!rsp) {
+        //     rsp = await this.login(spotifyId, tokens.accessToken, tokens.refreshToken)
+        // }
+        // this.login(spotifyId, tokens.accessToken, tokens.refreshToken).then((rsp) => {
+        //     console.log("response from login", rsp)
+        //     // if (rsp.status !== 200) {
+        //     //     console.log
+        // })
+
+        // // else try post user and then log user in
+        // // Posting user
+        // const postUserRsp = setUser(myProfile)
+
+        // window.location = this.redirectUri;
 
         return tokens;
     },

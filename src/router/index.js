@@ -6,6 +6,7 @@ import UserDetailView from '../views/detail-pages/UserDetailView.vue'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import ButtonTestView from '../views/ButtonTestView.vue'
+import FriendListView from '../views/FriendListView.vue'
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path: '/button',
     name: 'ButtonTestView',
     component: ButtonTestView
+  },
+  {
+    path: '/friends',
+    name: 'FriendListView',
+    component: FriendListView
   },
 ]
 

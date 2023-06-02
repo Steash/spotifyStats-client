@@ -1,4 +1,5 @@
 <template class="">
+    <div class="container mx-auto px-4 py-8">
     <div class="pb-10">
         <h1 class="text-2xl font-bold pb-4">Friend list</h1>
         <div v-for="(friend, index) in friendList" :key="index" class="flex flex-row p-3">
@@ -24,7 +25,7 @@
         </div>
     </div>
 
-    <!-- <div class="pb-10">
+    <div class="pb-10">
         <h1 class="text-2xl font-bold pb-4">Friend requests</h1>
         <div v-for="(friend, index) in receivedFriendRequests" :key="index" class="flex flex-row p-3 items-center">
             <router-link :to="{ name: 'UserDetail', params: { id: friend.spotifyId } }" class="flex flex-row p-3 items-center">
@@ -37,7 +38,7 @@
         <div v-if="receivedFriendRequests.length == 0">
             <p>There are no incoming friend requests</p>
         </div>
-    </div> -->
+    </div>
 
     <div class="pb-10">
         <h1 class="text-2xl font-bold pb-4">Sent friend requests</h1>
@@ -72,6 +73,7 @@
             <p>You have not sent any friend requests</p>
         </div>
     </div>
+</div>
 
 </template>
 
