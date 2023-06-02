@@ -19,10 +19,11 @@ const login = {
 
         // Retrieving user profile
         const myProfile = await user.getSpotifyUser(tokens.accessToken)
-        
+
         // login
         // try this first
         console.log("logging in...")
+        console.log("hi")
         this.login(myProfile, tokens.accessToken, tokens.refreshToken)
 
         return tokens;
