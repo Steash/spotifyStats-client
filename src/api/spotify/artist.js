@@ -21,7 +21,7 @@ const artist = {
             return response.data;
           } catch (error) {
             console.log(error);
-            return error
+            // return error
           }
     },
     async getTopTracks(accessToken, artistId) {

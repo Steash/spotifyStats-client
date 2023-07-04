@@ -19,18 +19,6 @@ const spotifyUser = {
             console.error(error);
         }
     },
-    postSpotifyUser(user) {
-        const url = 'http://localhost:8080/user/create'
-
-        // console.log(user)
-
-        axios.post(url, user)
-            .then(response => {
-                console.log(response);
-            }).catch(error => {
-                console.log(error)
-            });
-    }
 }
 
 export default spotifyUser;

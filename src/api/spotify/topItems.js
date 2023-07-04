@@ -3,7 +3,7 @@ import store from '@/store'
 
 const topItems = {
     async getTopItems(token, type) {
-        const timeRange = 'medium_term';
+        const timeRange = 'long_term';
         const limit = 50;
         const offset = 0;
     

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import store from '@/store';
 import user from './user';
+import authentication from '@/api/backend/authentication';
 
 const login = {
     clientId: '8c92a572d46545d8bba7bb2ad6d182a6',
@@ -8,6 +9,11 @@ const login = {
     redirectUri: 'http://localhost:8081/',
     scopes: ['user-top-read', 'user-read-private', 'user-read-email'], 
     state: '12345678',
+
+    async loginUser() {
+        await this.loginSpotify()
+        await this.authorize()
+    },
 
     /**
      * Logs the user in and obtains an access token and refresh token.
@@ -24,7 +30,7 @@ const login = {
         // try this first
         console.log("logging in...")
         console.log("hi")
-        this.login(myProfile, tokens.accessToken, tokens.refreshToken)
+        authentication.login(myProfile, tokens.accessToken, tokens.refreshToken)
 
         return tokens;
     },
@@ -33,10 +39,9 @@ const login = {
      * Redirects the user to the Spotify authorization page.
      */
     async loginSpotify() {
-        const url = await `https://accounts.spotify.com/authorize?response_type=code&client_id=${this.clientId}&scope=${encodeURIComponent(this.scopes.join(' '))}&redirect_uri=${encodeURIComponent(this.redirectUri)}&state=${this.state}`;
+        const url = `https://accounts.spotify.com/authorize?response_type=code&client_id=${this.clientId}&scope=${encodeURIComponent(this.scopes.join(' '))}&redirect_uri=${encodeURIComponent(this.redirectUri)}&state=${this.state}`;
         
-        window.location = await url;
-
+        window.location.href = url;
     },
 
     /**
@@ -91,54 +96,7 @@ const login = {
             throw new Error('Failed to retrieve access token');
         }
     },
-    async login(myProfile, accessToken, refreshToken) {
-        console.log(myProfile)
 
-        const url = 'http://localhost:8080/user/login'
-
-        const loginDto = {
-            "spotifyId": myProfile.id,
-            "accessToken": accessToken,
-            "refreshToken": refreshToken
-        }
-
-        try {
-            const response = await axios.post(url, loginDto)
-
-            if (response.data) {
-                console.log('login response: ', response.data.userSpotifyId);
-                store.commit('SET_USER_SPOTIFY_ID', response.data.userSpotifyId);
-                // push to home?
-                return
-            } 
-        } catch (error) {
-            console.log(error);
-            throw new Error('Failed to retrieve access token');
-        }
-
-        console.log('Setting user');
-        await this.setUser(myProfile)
-        await this.login(myProfile, accessToken, refreshToken)
-
-        
-    },
-    logout() {
-        
-        const url = 'http://localhost:8080/user/logout'
-
-        const logoutDto = {
-            "userSpotifyId": store.getters.userSpotifyId
-        }
-
-        axios.put(url, logoutDto)
-            .then(response => {
-                console.log('Token deleted: ', response.data);
-                // Clear State & LocalStorage
-                store.commit('CLEAR_ALL');
-            }).catch(error => {
-                console.log(error)
-            });
-    },
     setUser(myProfile) {
         const profile = {
             displayName : myProfile.display_name,
@@ -152,7 +110,7 @@ const login = {
         }
 
         if (myProfile.images.length > 0) {
-            user.avatar = myProfile.images[0].url
+            profile.avatar = myProfile.images[0].url
         }
 
         return user.postSpotifyUser(profile);

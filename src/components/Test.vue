@@ -22,6 +22,10 @@
         </div>
     </div>
 
+    <button class="bg-gray-800 hover:bg-gray-700 text-white rounded-lg px-4 py-2" @click="postAllMyTopArtists()">
+        Post all Top Artists
+    </button>
+
 
     <!-- <div class="my-8">
       <h1 class="text-3xl font-bold mb-4">My Profile</h1>

@@ -1,80 +1,123 @@
 <template class="">
-    <div class="container mx-auto px-4 py-8">
-    <div class="pb-10">
-        <h1 class="text-2xl font-bold pb-4">Friend list</h1>
-        <div v-for="(friend, index) in friendList" :key="index" class="flex flex-row p-3">
-            <router-link :to="{ name: 'UserDetail', params: { id: friend.spotifyId } }" class="flex flex-row items-center">
-                <img class="w-12 h-12 my-auto" :src="friend.avatar" alt="cover art">
-                <p class="px-3">{{ friend.displayName }}</p> 
-            </router-link>
-
-            <!-- Unfriend -->
-            <button v-if="!confirmationVisibility[friend.spotifyId]" @click="toggleConfirmation(friend.spotifyId)" class="bg-red-500 hover:bg-red-400 text-white rounded-2xl px-3 py-1 m-1">
-                Unfriend</button> 
-            <div v-if="confirmationVisibility[friend.spotifyId]">
-                <p>Are you sure you want to remove {{ friend.displayName }} from your friends list?</p>
-                <button @click="removeFriend(friend.spotifyId)" class="bg-red-500 hover:bg-red-400 text-white rounded-2xl px-3 py-1 m-1">Unfriend</button> 
-                <button @click="toggleConfirmation(friend.spotifyId)" class="bg-gray-500 hover:bg-gray-400 text-white rounded-2xl px-3 py-1 m-1">Cancel</button> 
+    <!-- Outer div -->
+    <div class="mx-auto max-w-3xl py-10">
+        <!-- Card -->
+        <div class="bg-white rounded-2xl shadow-lg max-w-full">
+            <!-- Title box -->
+            <div class="flex flex-row rounded-xl bg-orange-300 p-6 px-14 ">
+                <h1 class="text-2xl font-semibold text-white" id="topArtists-box">Friend list</h1>
             </div>
-            
-        </div>
-        
 
-        <div v-if="friendList.length == 0">
-            <p>You have no friends added yet</p>
-        </div>
-    </div>
+            <div class="container mx-auto px-4 py-8">
+                <div class="pb-14">
+                    <!-- <h1 class="text-2xl font-bold pb-4">Friend list</h1> -->
+                    <div v-for="(friend, index) in friendList" :key="index" class="flex flex-row p-3 px-10 justify-between">
+                       
+                        <router-link :to="{ name: 'UserDetail', params: { id: friend.spotifyId } }"
+                            class="flex flex-row items-center">
+                            <img class="w-12 h-12 my-auto" :src="friend.avatar" alt="cover art">
+                            <p class="px-3">{{ friend.displayName }}</p>
+                        </router-link>
 
-    <div class="pb-10">
-        <h1 class="text-2xl font-bold pb-4">Friend requests</h1>
-        <div v-for="(friend, index) in receivedFriendRequests" :key="index" class="flex flex-row p-3 items-center">
-            <router-link :to="{ name: 'UserDetail', params: { id: friend.spotifyId } }" class="flex flex-row p-3 items-center">
-                <img class="w-12 h-12 my-auto" :src="friend.avatar" alt="cover art">
-                <p class="px-3">{{ friend.displayName }}</p> 
-            </router-link>
-            <button @click="acceptFriendRequest(friend.spotifyId)" class="bg-green-500 hover:bg-green-400 text-white rounded-2xl px-3 py-1 m-1">Accept</button> 
-            <button @click="declineFriendRequest(friend.spotifyId)" class="bg-gray-500 hover:bg-gray-400 text-white rounded-2xl px-3 py-1 m-1">Decline</button>
-        </div>
-        <div v-if="receivedFriendRequests.length == 0">
-            <p>There are no incoming friend requests</p>
-        </div>
-    </div>
 
-    <div class="pb-10">
-        <h1 class="text-2xl font-bold pb-4">Sent friend requests</h1>
-        <div v-for="(friend, index) in sentFriendRequests" :key="index">
-            <div class="flex flex-row p-3 items-center">
-                <router-link :to="{ name: 'UserDetail', params: { id: friend.spotifyId } }" class="flex flex-row items-center">
-                    <img class="w-12 h-12 my-auto" :src="friend.avatar" alt="cover art" > 
-                    <p class="px-3">{{ friend.displayName }}</p>
-                </router-link>
+                        <!-- Unfriend -->
+                        <div class="">
+                            <button v-if="!confirmationVisibility[friend.spotifyId]"
+                                @click="toggleConfirmation(friend.spotifyId)"
+                                class="bg-red-500 hover:bg-red-400 text-white rounded-2xl px-3 py-2 m-1 flex items-center">
+                                
+                                <!-- Unfriend -->
+                                <span class="material-symbols-outlined">
+                                    person_remove
+                                </span>
+                            </button>
 
-                <!-- Retract friend request -->
-                <!-- <button v-if="!retractConfirmationVisibility[friend.spotifyId]" 
-                @click="toggleRetractConfirmation(friend.spotifyId)"
-                class="text-red-300 ">Retract friend request</button> -->
+                            <!-- Unfriend confirmation -->
+                            <div v-if="confirmationVisibility[friend.spotifyId]">
+                                <p>Are you sure you want to remove {{ friend.displayName }} from your friends list?</p>
+                                <button @click="removeFriend(friend.spotifyId)"
+                                    class="bg-red-500 hover:bg-red-400 text-white rounded-2xl px-3 py-1 m-1">Unfriend</button>
+                                <button @click="toggleConfirmation(friend.spotifyId)"
+                                    class="bg-gray-500 hover:bg-gray-400 text-white rounded-2xl px-3 py-1 m-1">Cancel</button>
+                            </div>
+                        </div>
 
-                <button v-if="!retractConfirmationVisibility[friend.spotifyId]" 
-                @click="toggleRetractConfirmation(friend.spotifyId)" 
-                class="bg-red-500 hover:bg-red-400 text-white rounded-2xl px-3 py-1 m-1">
-                Retract friend request</button> 
-                
+                    </div>
 
-                <div v-if="retractConfirmationVisibility[friend.spotifyId]">
-                    <p>Are you sure you want to retract your friend request to {{ friend.displayName }}?</p>
-                    <button @click="retractFriendRequest(friend.spotifyId)" class="bg-red-500 hover:bg-red-400 text-white rounded-2xl px-3 py-1 m-1">Retract friend request</button> 
-                    <button @click="toggleRetractConfirmation(friend.spotifyId)" class="bg-gray-500 hover:bg-gray-400 text-white rounded-2xl px-3 py-1 m-1">Cancel</button> 
+
+                    <div v-if="friendList.length == 0">
+                        <p>You have no friends added yet</p>
+                    </div>
                 </div>
 
+                <div class="px-10">
+                    
+                    <div class="pb-14">
+                        <h1 class="text-2xl font-bold pb-4">Friend requests</h1>
+                        <div v-for="(friend, index) in receivedFriendRequests" :key="index"
+                            class="flex flex-row items-center">
+                            
+                            <router-link :to="{ name: 'UserDetail', params: { id: friend.spotifyId } }"
+                                class="flex flex-row p-3 items-center">
+                                <img class="w-12 h-12 my-auto" :src="friend.avatar" alt="cover art">
+                                <p class="px-3">{{ friend.displayName }}</p>
+                            </router-link>
+                            <button @click="acceptFriendRequest(friend.spotifyId)"
+                                class="bg-green-500 hover:bg-green-400 text-white rounded-2xl px-3 py-1 m-1">Accept</button>
+                            <button @click="declineFriendRequest(friend.spotifyId)"
+                                class="bg-gray-500 hover:bg-gray-400 text-white rounded-2xl px-3 py-1 m-1">Decline</button>
+                        </div>
+                        <div v-if="receivedFriendRequests.length == 0">
+                            <p class="text-gray-500 py-1">There are no incoming friend requests</p>
+                        </div>
+                    </div>
 
+
+                    <div class="pb-8">
+                        <h1 class="text-2xl font-bold pb-4">Sent friend requests</h1>
+                        <div v-for="(friend, index) in sentFriendRequests" :key="index">
+                            <div class="flex flex-row py-3 items-center justify-between">
+                                <router-link :to="{ name: 'UserDetail', params: { id: friend.spotifyId } }"
+                                    class="flex flex-row items-center">
+                                    <img class="w-12 h-12 my-auto" :src="friend.avatar" alt="cover art">
+                                    <p class="px-3">{{ friend.displayName }}</p>
+                                </router-link>
+
+                                <!-- Retract friend request -->
+                                <!-- <button v-if="!retractConfirmationVisibility[friend.spotifyId]" 
+                    @click="toggleRetractConfirmation(friend.spotifyId)"
+                    class="text-red-300 ">Retract friend request</button> -->
+
+                                <button v-if="!retractConfirmationVisibility[friend.spotifyId]"
+                                    @click="toggleRetractConfirmation(friend.spotifyId)"
+                                    class="bg-red-500 hover:bg-red-400 text-white rounded-2xl px-3 py-1 m-1">
+                                    <!-- Retract friend request -->
+                                    <span class="material-symbols-outlined">
+                                        cancel_schedule_send
+                                    </span>
+                                </button>
+
+
+                                <div v-if="retractConfirmationVisibility[friend.spotifyId]">
+                                    <p>Are you sure you want to retract your friend request to {{ friend.displayName }}?</p>
+                                    <button @click="retractFriendRequest(friend.spotifyId)"
+                                        class="bg-red-500 hover:bg-red-400 text-white rounded-2xl px-3 py-1 m-1">Retract friend
+                                        request</button>
+                                    <button @click="toggleRetractConfirmation(friend.spotifyId)"
+                                        class="bg-gray-500 hover:bg-gray-400 text-white rounded-2xl px-3 py-1 m-1">Cancel</button>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div v-if="sentFriendRequests.length == 0">
+                            <p>You have not sent any friend requests</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div v-if="sentFriendRequests.length == 0">
-            <p>You have not sent any friend requests</p>
-        </div>
     </div>
-</div>
-
 </template>
 
 <script>
@@ -98,9 +141,9 @@ export default {
     async mounted() {
         this.friendList = await friend.getFriendList()
 
-            this.sentFriendRequests = await friend.sentFriendRequests() 
-            this.receivedFriendRequests = await friend.receivedFriendRequests() 
-            console.log("received: ", this.receivedFriendRequests)
+        this.sentFriendRequests = await friend.sentFriendRequests()
+        this.receivedFriendRequests = await friend.receivedFriendRequests()
+        console.log("received: ", this.receivedFriendRequests)
     },
     methods: {
         // async friend() {

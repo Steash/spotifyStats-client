@@ -1,84 +1,110 @@
 <template>
-    <div class="container mx-auto px-4 py-8 flex flex-col items-center">
-        <!-- <div class="py-8 px-10 pb-20 flex mx-auto flex-col items-center"></div> -->
+    <!-- Outer div -->
+    <div class="mx-auto max-w-3xl py-10">
+        <!-- Card -->
+        <div class="bg-white rounded-2xl shadow-lg max-w-full">
+            <!-- Title box -->
+            <div class="flex flex-row rounded-xl bg-orange-300 p-6 px-16 ">
+                <h1 class="text-2xl font-semibold text-white" id="topArtists-box">Your Music Buddies</h1>
+            </div>
+            <div class="container mx-auto px-4  flex flex-col ">
+                <!-- <div class="py-8 px-10 pb-20 flex mx-auto flex-col items-center"></div> -->
 
-        <!-- Music buddies -->
+                <!-- Music buddies -->
 
-        <div class="flex-col items-center p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2">
-            <h1 class="text-2xl font-bold pb-4" id="topArtists-box">Your Music Buddies</h1>
-            
-            <div v-if="musicBuddies">
-                <!-- <h3 class="font-bold text-sm pl-96">Mutual Top Artists</h3>  -->
-                
-                <div v-for="(musicBuddy, index) in musicBuddies" :key="index" class="flex flex-row items-center py-2">
-                    <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
-                    <img class="w-12 h-12 my-auto" :src="musicBuddy.avatar" alt="cover art">
-                    
-                    <div class="flex flex-row items-start justify-between flex-1 pl-4">
-                        <router-link :to="{ name: 'UserDetail', params: { id: musicBuddy.spotifyId } }"
-                            class="text-lg hover:text-gray-200">
-                            <!-- <p class="w-full md:w-96 px-2">{{ artist.name }}</p> -->
-                            {{ musicBuddy.displayName }}
-                        </router-link>
+                <div class="flex-col items-center p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2">
+                    <!-- <h1 class="text-2xl font-bold pb-4" id="topArtists-box">Your Music Buddies</h1> -->
+
+                    <div v-if="musicBuddies">
+                        <!-- <h3 class="font-bold text-sm pl-96">Mutual Top Artists</h3>  -->
+
+                        <div v-for="(musicBuddy, index) in musicBuddies" :key="index"
+                            class="flex flex-row items-center py-2">
+                            <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
+                            <img class="w-12 h-12 my-auto" :src="musicBuddy.avatar" alt="cover art">
+
+                            <div class="w-32 flex flex-row items-start justify-between flex-1 pl-4">
+                                <router-link :to="{ name: 'UserDetail', params: { id: musicBuddy.spotifyId } }"
+                                    class="text-lg hover:text-orange-400">
+                                    <!-- <p class="w-full md:w-96 px-2">{{ artist.name }}</p> -->
+                                    {{ musicBuddy.displayName }}
+                                </router-link>
+                            </div>
+                            <h4 class="w-14 px-6 my-auto text-center">{{ musicBuddy.mutualTopArtists.length }}</h4>
+                        </div>
+                        <!-- <button @click="toggleExpandedArtists" class="px-5 py-4 text-gray-500 hover:text-orange-600 hover:font-medium">View less</button> -->
                     </div>
-                    <h4 class="w-14 px-6 my-auto text-center">{{ musicBuddy.mutualTopArtists.length }}</h4>
+                    <div v-if="!musicBuddies">
+                        <p class="text-gray-500 py-3 text-sm">There are no common mutual top artists found between you and
+                            your friends. </p>
+                        <p class="text-gray-500 py-3 text-sm">Consider adding more friends to discover who your music
+                            buddies are!</p>
+                    </div>
+
                 </div>
-                <!-- <button @click="toggleExpandedArtists" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View less</button> -->
+
+
+
+
             </div>
-            <div v-if="!musicBuddies">
-                <p class="text-gray-500 py-2">There are no common mutual top artists found between you and your friends. </p>
-                <p class="text-gray-500 py-2">Consider adding more friends to discover who your music buddies are!</p>
-            </div>
-            
         </div>
 
-
-
-        <!-- artist box -->
-        <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2">
-            
-
-            <div v-if="topArtists.length > 0">
-                <h1 class="text-2xl font-bold pb-4" id="topArtists-box">My Top Artists</h1>
-
-                <div v-if="!expandedArtists">
-                    <div v-for="(artist, index) in topFiveArtists" :key="index" class="flex flex-row items-center py-2">
-                        <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
-                        <img class="w-12 h-12 my-auto" :src="artist.images[2].url" alt="cover art">
-                        <div class="flex flex-row items-start justify-between flex-1 pl-4">
-                            <router-link :to="{ name: 'ArtistDetail', params: { id: artist.id } }"
-                                class="text-lg hover:text-gray-200">
-                                <!-- <p class="w-full md:w-96 px-2">{{ artist.name }}</p> -->
-                                {{ artist.name }}
-                            </router-link>
-                        </div>
-                        <!-- <h4 class="w-14 px-6 my-auto text-center">{{ artist.popularity }}</h4> -->
-                        <!-- <h4 v-for="(genre, index) in artist.genres" :key="index" >{{ genre }}</h4> -->
-                        
-                    </div>
-                    <button @click="toggleExpandedArtists" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View all</button>
-                </div>
-
-                <div v-if="expandedArtists">
-                    <div v-for="(artist, index) in topArtists" :key="index" class="flex flex-row items-center py-2">
-                        <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
-                        <img class="w-12 h-12 my-auto" :src="artist.images[2].url" alt="cover art">
-                        <div class="flex flex-row items-start justify-between flex-1 pl-4">
-                            <router-link :to="{ name: 'ArtistDetail', params: { id: artist.id } }"
-                                class="text-lg hover:text-gray-200">
-                                <!-- <p class="w-full md:w-96 px-2">{{ artist.name }}</p> -->
-                                {{ artist.name }}
-                            </router-link>
-                        </div>
-                    </div>
-                    <button @click="toggleExpandedArtists" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View less</button>
-                </div>
+        <!-- Card -->
+        <div class="bg-white rounded-2xl shadow-lg max-w-full my-8">
+            <!-- Title box -->
+            <div class="flex flex-row rounded-xl bg-amber-600 p-6 px-16 ">
+                <h1 class="text-2xl font-semibold text-white" id="topArtists-box">My Top Artists</h1>
             </div>
-            
-            
-        </div>
-        <div v-if="topArtists.length == 0">
-            <NoData/>
+
+            <!-- artist box -->
+            <div class="flex-col items-start p-6 px-10 border-gray-900 md:w-2/3 lg:w-1/2">
+
+
+                <div v-if="topArtists.length > 0">
+                    <!-- <h1 class="text-2xl font-bold pb-4" id="topArtists-box">My Top Artists</h1> -->
+
+                    <div v-if="!expandedArtists">
+                        <div v-for="(artist, index) in topFiveArtists" :key="index" class="flex flex-row items-center py-2">
+                            <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
+                            <img class="w-12 h-12 my-auto" :src="artist.images[2].url" alt="cover art">
+                            <div class="flex flex-row items-start justify-between flex-1 pl-4">
+                                <router-link :to="{ name: 'ArtistDetail', params: { id: artist.id } }"
+                                    class="text-lg hover:text-orange-400">
+                                    <!-- <p class="w-full md:w-96 px-2">{{ artist.name }}</p> -->
+                                    {{ artist.name }}
+                                </router-link>
+                            </div>
+                            <!-- <h4 class="w-14 px-6 my-auto text-center">{{ artist.popularity }}</h4> -->
+                            <!-- <h4 v-for="(genre, index) in artist.genres" :key="index" >{{ genre }}</h4> -->
+
+                        </div>
+                        <!-- <button @click="toggleExpandedArtists"
+                            class="px-5 py-4 text-gray-500 hover:text-orange-600 hover:font-medium">View all</button> -->
+                    </div>
+
+                    <div v-if="expandedArtists">
+                        <div v-for="(artist, index) in topArtists" :key="index" class="flex flex-row items-center py-2">
+                            <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
+                            <img class="w-12 h-12 my-auto" :src="artist.images[2].url" alt="cover art">
+                            <div class="flex flex-row items-start justify-between flex-1 pl-4">
+                                <router-link :to="{ name: 'ArtistDetail', params: { id: artist.id } }"
+                                    class="text-lg hover:text-orange-400">
+                                    <!-- <p class="w-full md:w-96 px-2">{{ artist.name }}</p> -->
+                                    {{ artist.name }}
+                                </router-link>
+                            </div>
+                        </div>
+                        <button @click="toggleExpandedArtists"
+                            class="px-5 py-4 text-gray-500 hover:text-orange-600 hover:font-medium">View less</button>
+                    </div>
+                </div>
+
+
+            </div>
+            <div v-if="topArtists.length == 0">
+                <NoData />
+            </div>
+
         </div>
 
     </div>
@@ -138,7 +164,7 @@ export default {
         },
         scrollToTarget(id) {
             const targetElement = document.getElementById(id)
-            targetElement.scrollIntoView({ behavior: 'smooth'})
+            targetElement.scrollIntoView({ behavior: 'smooth' })
         },
         async getMusicBuddies() {
             this.musicBuddies = await backendUser.getMusicBuddies()

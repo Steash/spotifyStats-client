@@ -22,7 +22,7 @@
 
                     <!-- Nav Links -->
                     <div id="middle">
-                        <SearchBar/>
+                        <!-- <SearchBar/> -->
 
                         <ul class="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-12 text-white">
                             <!-- <li><router-link to="/test" class="hover:text-gray-200 text-white">Test</router-link></li> -->
@@ -59,26 +59,51 @@
                                 <ul class="py-2 px-2">
                                     <li>
                                         <router-link @click="closeDropdown" :to="{ name: 'UserDetail', params: { id: store.state.userSpotifyId } }">
-                                            <span
-                                                class="block py-2 px-8 text-left text-gray-800 hover:bg-gray-200 rounded-lg font-normal">Profile</span>
+                                            <div class="py-2 px-5 text-left text-gray-800 hover:bg-gray-200 rounded-lg font-normal flex flex-row">
+                                                <span class="material-symbols-outlined">
+                                                    account_circle
+                                                </span>
+                                                <span class="px-3">
+                                                    Profile
+                                                </span>
+                                            </div>
                                         </router-link>
                                     </li>
                                     <li>
                                         <router-link to="/friends">
-                                            <span
-                                                class="block py-2 px-8 text-left text-gray-800 hover:bg-gray-200 rounded-lg font-normal">Friends</span>
+                                            <div class="py-2 px-5 text-left text-gray-800 hover:bg-gray-200 rounded-lg font-normal flex flex-row">
+                                                <span class="material-symbols-outlined">
+                                                    group
+                                                </span>
+                                                <span class="px-3">
+                                                    Friends
+                                                </span>
+                                            </div>
                                         </router-link>
                                     </li>
                                     <li>
-                                        <router-link @click="closeDropdown" to="/test">
-                                            <span class="block py-2 px-8 text-left text-gray-800 hover:bg-gray-200 rounded-lg font-normal">Test</span>
+                                        <router-link @click="closeDropdown" to="/search">
+                                            <div class="py-2 px-5 text-left text-gray-800 hover:bg-gray-200 rounded-lg font-normal flex flex-row">
+                                                <span class="material-symbols-outlined">
+                                                    search
+                                                </span>
+                                                <span class="px-3">
+                                                    Search
+                                                </span>
+                                            </div>
                                         </router-link>
                                     </li>
                                     <li>
-                                        <button class="block py-2 px-8 text-left text-gray-800 hover:bg-gray-200 rounded-lg font-normal"
-                                            @click="logout()">
-                                            Logout
-                                        </button>
+                                        <div class="py-2 px-5 text-left text-gray-800 hover:bg-gray-200 rounded-lg font-normal flex flex-row">
+                                                <span class="material-symbols-outlined">
+                                                    logout
+                                                </span>
+                                                <button class="px-3"
+                                                    @click="logout()">
+                                                    Logout
+                                                </button>
+                                            </div>
+                                        
                                     </li>
                                     
                                     
@@ -101,15 +126,16 @@
 </template>
 
 <script>
-import authentication from '@/api/spotify/authentication.js'
+import authentication from '@/api/backend/authentication.js'
+import register from '@/api/spotify/authentication.js'
 import store from '@/store'
 import SpotifyLogin from '@/components/SpotifyLogin.vue'
-import SearchBar from '@/components/reusables/SearchBar.vue'
+// import SearchBar from '@/components/reusables/SearchBar.vue'
 
 export default {
     name: 'HelloWorld',
     components: { 
-        SearchBar, 
+        // SearchBar, 
     },
     data() {
         return {
@@ -140,11 +166,11 @@ export default {
             }, 0);
         },
         async onLogin() {
-            authentication.loginSpotify() // .then(authentication.authorize())
+            register.loginSpotify() // .then(authentication.authorize())
 
         },
         async authorize() {
-            await authentication.authorize();
+            await register.authorize();
             // console.log('logged in token: ' + token);
         }
 

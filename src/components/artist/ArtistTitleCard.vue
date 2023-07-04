@@ -5,14 +5,23 @@
         <div class="bg-white rounded-2xl shadow-lg max-w-full ">
             <!-- Title box -->
             <div class="flex flex-row rounded-xl bg-zinc-800 p-10 ">
-                <div class="w-28 h-28 rounded-full overflow-hidden my-auto mr-6">
-                    <img class="w-full h-auto my-auto" :src="this.artistImage" alt="cover art">
-                    
+
+                <div v-if="artist" class="flex flex-row" >
+                    <div class="w-28 h-28 rounded-full overflow-hidden my-auto mr-6">
+                        <img class="w-full h-auto my-auto" :src="this.artistImage" alt="cover art">
+                        
+                    </div>
+                    <div class="flex-col flex items-start my-auto justify-center ">
+                        <h1 class="text-6xl text-white font-semibold pt- pb-4"> {{ this.artist.name }}</h1>
+                        <button @click="scrollToTarget('mutual-fan-box')" class="text-white pl-1">{{ mutualFans.length }} friends also listen to {{ this.artist.name }}</button>
+                    </div>
                 </div>
-                <div class="flex-col flex items-start my-auto justify-center ">
-                    <h1 class="text-6xl text-white font-semibold pt- pb-4"> {{ this.artist.name }}</h1>
-                    <button @click="scrollToTarget('mutual-fan-box')" class="text-white pl-1">{{ mutualFans.length }} friends also listen to {{ this.artist.name }}</button>
+
+                <div v-if="!artist" class="flex flex-row" >
+                    <p>This artist was not found in our database</p>
                 </div>
+
+
             </div>
 
             
@@ -20,40 +29,49 @@
             <!-- Song box -->
             
                 <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2" id="popular-songs-box">
-                    <h1 class="text-2xl font-bold pb-4">Popular</h1>
                     
-                    <div v-if="!expandedSongs">
-                        <div v-for="(track, index) in this.topFiveTracks" :key="index" class="flex flex-row items-center py-2">
-                            <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
-                            <img class="w-12 h-12 my-auto" :src="track.album.images[2].url" alt="cover art">
-                            <div class="flex flex-row items-start justify-between flex-1 pl-4">
-                                <p class="w-full md:w-96 px-2">{{ track.name }}</p>
-                                <p class="text-right md:w-96 sm:w-48 px-6">{{ convertMsToMins(track.duration_ms) }}</p>
+                    <div v-if="artist" class="" >
+                
+                        <h1 class="text-2xl font-bold pb-4">Popular</h1>
+                        
+                        <div v-if="!expandedSongs">
+                            <div v-for="(track, index) in this.topFiveTracks" :key="index" class="flex flex-row items-center py-2">
+                                <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
+                                <img class="w-12 h-12 my-auto" :src="track.album.images[2].url" alt="cover art">
+                                <div class="flex flex-row items-start justify-between flex-1 pl-4">
+                                    <p class="w-full md:w-96 px-2">{{ track.name }}</p>
+                                    <p class="text-right md:w-96 sm:w-48 px-6">{{ convertMsToMins(track.duration_ms) }}</p>
+                                </div>
                             </div>
+                            <button @click="toggleExpandedSongs" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View more</button>
                         </div>
-                        <button @click="toggleExpandedSongs" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View more</button>
+
+                        <div v-if="expandedSongs">
+                            <div v-for="(track, index) in this.topTracks" :key="index" class="flex flex-row items-center py-2">
+                                <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
+                                <img class="w-12 h-12 my-auto" :src="track.album.images[2].url" alt="cover art">
+                                <div class="flex flex-row items-start justify-between flex-1 pl-4">
+                                    <p class="w-full md:w-96 px-2">{{ track.name }}</p>
+                                    <p class="text-right md:w-96 sm:w-48 px-6">{{ convertMsToMins(track.duration_ms) }}</p>
+                                </div>
+                            </div>
+                            <button @click="toggleExpandedSongs" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View less</button>
+                        </div>
                     </div>
 
-                    <div v-if="expandedSongs">
-                        <div v-for="(track, index) in this.topTracks" :key="index" class="flex flex-row items-center py-2">
-                            <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
-                            <img class="w-12 h-12 my-auto" :src="track.album.images[2].url" alt="cover art">
-                            <div class="flex flex-row items-start justify-between flex-1 pl-4">
-                                <p class="w-full md:w-96 px-2">{{ track.name }}</p>
-                                <p class="text-right md:w-96 sm:w-48 px-6">{{ convertMsToMins(track.duration_ms) }}</p>
-                            </div>
-                        </div>
-                        <button @click="toggleExpandedSongs" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View less</button>
+                    <div v-if="!artist" class="flex flex-row" >
+                        <p>This artist was not found in our database</p>
                     </div>
-                
-            </div>
+
+
+                </div>
 
            <!-- Mutual fan box -->
             
             <div class="flex-col items-start p-8 px-10 border-gray-900 md:w-2/3 lg:w-1/2" id="mutual-fan-box">
                     <h1 class="text-2xl font-bold pb-4">Friends who also listen to {{ this.artist.name }}</h1>
                     
-                    <div>
+                    <div v-if="mutualFans">
                         <div v-for="(user, index) in this.mutualFans" :key="index" >
                             <router-link :to="{ name: 'UserDetail', params: { id: user.userSpotifyId } }" class="flex flex-row items-center py-2">
                                 <h4 class="w-14 px-6 my-auto text-center">{{ index + 1 }}</h4>
@@ -64,6 +82,13 @@
                             </router-link>
                         </div>
                         <!-- <button @click="toggleExpandedSongs" class="px-5 py-4 text-gray-500 hover:text-green-600 hover:font-medium">View more</button> -->
+                    </div>
+
+                    <div v-if="!mutualFans">
+                        <p class="text-gray-500 py-2">
+                            None of your friends have {{ this.artist.name }} on their top artist list
+                        </p>
+
                     </div>
 
 
@@ -111,19 +136,31 @@ export default {
     // props: ['id'],
     methods: {
         async getArtistDetail() {
+            console.log("9999999934r324311231999CONSOLE LOGGING2131231GG: ", this.artist)
             const retrievedArtist = await artist.getArtist(store.getters.accessToken, this.$route.params.id)
             // console.log("retrieved artist: ", retrievedArtist)
             this.artist = retrievedArtist
             this.artistImage = this.artist.images[2].url
             // console.log("CONSOLE LOGGING2131231GG: ", this.artist.images[0].url)
+            console.log("99999999999CONSOLE LOGGING2131231GG: ", this.artist)
         },
         async getArtistTopTracks() {
             this.topTracks = await artist.getTopTracks(store.getters.accessToken, this.$route.params.id)
         },
+
+
+        // TO DO RETRIEVE ARTIST ID PROPERLY AND PASS IT INTO getMutualFans
         async getMutuals() {
-            this.mutualFans = await topArtist.getMutualFans("0du5cEVh5yTK9QJze8zA0C") // this.artist.name
+            // PROBLEM: NOT AVAILABLE YET AT TIME OF RETRIEVAL
+            console.log("getMutualszzz: ", this.artist.id)
+            this.mutualFans = await topArtist.getMutualFans(this.artist.id) // this.artist.name
             console.log("mutualists: ", this.mutualFans)
         },
+
+
+
+
+
         toggleExpandedSongs() {
             this.expandedSongs = !this.expandedSongs
             this.scrollToTarget('popular-songs-box')

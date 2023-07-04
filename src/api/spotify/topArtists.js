@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from 'axios'
+import store from '@/store/store'
 
 const topArtists = {
   async getTopArtists() {
@@ -12,7 +13,7 @@ const topArtists = {
     const url = `https://api.spotify.com/v1/me/top/${type}?time_range=${timeRange}&limit=${limit}&offset=${offset}`;
     const config = {
       headers: {
-        'Authorization': 'Bearer ' + this.accessToken
+        'Authorization': 'Bearer ' + store.getters.accessToken //this.accessToken
       }
     };
 
